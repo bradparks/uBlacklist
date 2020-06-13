@@ -85,7 +85,7 @@ module.exports = {
         use: ['url-loader', 'svg-transform-loader'],
       },
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         use: ['ts-loader', ifdefLoader],
       },
     ],
@@ -117,7 +117,7 @@ module.exports = {
     }),
   ],
   resolve: {
-    extensions: ['.js', '.ts'],
+    extensions: ['.js', '.ts', '.tsx'],
   },
   stats: {
     children: false,
