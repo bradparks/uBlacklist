@@ -6,7 +6,7 @@ import { sendMessage } from './messages';
 import { AltURL } from './utilities';
 
 async function main(): Promise<void> {
-  const options = await LocalStorage.load('blacklist', 'subscriptions', 'enablePathDepth');
+  const options = await LocalStorage.load(['blacklist', 'subscriptions', 'enablePathDepth']);
   const blacklist = new Blacklist(
     options.blacklist,
     Object.values(options.subscriptions).map(subscription => subscription.blacklist),

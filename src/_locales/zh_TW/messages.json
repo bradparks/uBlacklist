@@ -87,7 +87,7 @@
     "message": "在 Google 搜尋結果中被封鎖的網站"
   },
   "options_blacklistHelper": {
-    "message": "您可以使用 <a href=\"https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" target=\"_blank\">匹配模式</a> 或 <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions\" target=\"_blank\">正規表達式</a>。"
+    "message": "您可以使用 [匹配模式](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns) 或 [正規表達式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)。"
   },
   "options_importBlacklistButton": {
     "message": "匯入個人封鎖清單"
@@ -116,7 +116,7 @@
   "options_enabledOnSearchEngine": {
     "message": "已啟用"
   },
-  "options_hideBlockSiteLinksLabel": {
+  "options_hideBlockLinksLabel": {
     "message": "隱藏「封鎖這個網站」的連結"
   },
   "options_syncTitle": {

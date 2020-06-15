@@ -21,7 +21,7 @@ export async function requestToken(interactive: boolean): Promise<string> {
   try {
     // #endif
     return await mutex.lock(async () => {
-      const { tokenCache } = await LocalStorage.load('tokenCache');
+      const { tokenCache } = await LocalStorage.load(['tokenCache']);
       if (tokenCache && dayjs().isBefore(dayjs(tokenCache.expirationDate))) {
         return tokenCache.token;
       }

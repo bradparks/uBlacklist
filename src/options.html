@@ -7,40 +7,14 @@
     <script defer src="scripts/options.js"></script>
   </head>
   <body>
+    <div id="options"></div>
+    <div id="importBlacklistDialog"></div>
+    <!--
     <section class="section">
       <h1 class="title">
         <span data-i18n="options_generalTitle"></span>
       </h1>
       <ul class="list">
-        <li class="list-item">
-          <div class="field">
-            <p>
-              <span data-i18n="options_blacklistLabel"></span>
-            </p>
-          </div>
-          <div class="field">
-            <div class="control">
-              <textarea id="blacklist" class="textarea has-fixed-size" placeholder="*://*.example.com/*&#13;&#10;/example\.(net|org)/" rows="10" spellcheck="false"></textarea>
-            </div>
-            <p class="help has-text-grey">
-              <span data-i18n="options_blacklistHelper"></span>
-            </p>
-          </div>
-          <div class="field">
-            <div class="columns is-vcentered">
-              <div class="column">
-                <button id="importBlacklist" class="button has-text-primary">
-                  <span data-i18n="options_importBlacklistButton"></span>
-                </button>
-              </div>
-              <div class="column is-narrow">
-                <button id="saveBlacklist" class="button is-primary" disabled>
-                  <span data-i18n="options_saveBlacklistButton"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </li>
         <li class="list-item">
           <p>
             <span data-i18n="options_otherSearchEngines"></span>
@@ -50,51 +24,6 @@
           </p>
           <ul id="engines" class="list is-inner">
           </ul>
-        </li>
-        <li class="list-item">
-          <div class="columns is-vcentered">
-            <div class="column">
-              <label for="hideBlockSiteLinks">
-                <span data-i18n="options_hideBlockSiteLinksLabel"></span>
-              </label>
-            </div>
-            <div class="column is-narrow">
-              <div class="switch-wrapper">
-                <input id="hideBlockSiteLinks" class="switch is-rounded" type="checkbox"></input>
-                <label class="label" for="hideBlockSiteLinks"></label>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li class="list-item">
-          <div class="columns is-vcentered">
-            <div class="column">
-              <label for="hideControl">
-                <span data-i18n="options_hideControl"></span>
-              </label>
-            </div>
-            <div class="column is-narrow">
-              <div class="switch-wrapper">
-                <input id="hideControl" class="switch is-rounded" type="checkbox"></input>
-                <label class="label" for="hideControl"></label>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li class="list-item">
-          <div class="columns is-vcentered">
-            <div class="column">
-              <label for="skipBlockDialog">
-                <span data-i18n="options_skipBlockDialog"></span>
-              </label>
-            </div>
-            <div class="column is-narrow">
-              <div class="switch-wrapper">
-                <input id="skipBlockDialog" class="switch is-rounded" type="checkbox"></input>
-                <label class="label" for="skipBlockDialog"></label>
-              </div>
-            </div>
-          </div>
         </li>
       </ul>
     </section>
@@ -203,36 +132,6 @@
         </li>
       </ul>
     </section>
-    <div id="importBlacklistDialog" class="modal">
-      <div id="importBlacklistDialog_background" class="modal-background"></div>
-      <div class="modal-content box">
-        <div class="field">
-          <h1 class="title">
-            <span data-i18n="options_importBlacklistDialog_title"></span>
-          </h1>
-        </div>
-        <div class="field">
-          <div class="control">
-            <textarea id="importBlacklistDialog_blacklist" class="textarea has-fixed-size" placeholder="example.com" rows="10" spellcheck="false"></textarea>
-          </div>
-          <p class="help has-text-grey">
-            <span data-i18n="options_importBlacklistDialog_helper"></span>
-          </p>
-        </div>
-        <div class="field is-grouped is-grouped-right">
-          <div class="control">
-            <button id="importBlacklistDialog_cancel" class="button has-text-primary">
-              <span data-i18n="cancelButton"></span>
-            </button>
-          </div>
-          <div class="control">
-            <button id="importBlacklistDialog_import" class="button is-primary">
-              <span data-i18n="options_importBlacklistDialog_importButton"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
     <div id="addSubscriptionDialog" class="modal">
       <div id="addSubscriptionDialog_background" class="modal-background"></div>
       <div class="modal-content box">
@@ -289,5 +188,6 @@
         </div>
       </div>
     </div>
+  -->
   </body>
 </html>

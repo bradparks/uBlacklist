@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:react/recommended'],
+  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
   env: {
     node: true,
   },
@@ -9,20 +9,26 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/scripts/has-content-handlers.js'],
+      files: ['src/**/*.js'],
       env: {
         browser: true,
       },
     },
     {
-      files: ['src/**/*.ts'],
-      extends: ['plugin:@typescript-eslint/recommended', 'prettier/@typescript-eslint'],
+      files: ['src/**/*.{ts,tsx}'],
+      extends: [
+        'plugin:@typescript-eslint/recommended',
+        'plugin:react/recommended',
+        'prettier/@typescript-eslint',
+        'prettier/react',
+      ],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         project: './tsconfig.eslint.json',
       },
       plugins: ['@typescript-eslint'],
       rules: {
+        'react/prop-types': ['off'],
         '@typescript-eslint/no-non-null-assertion': ['off'],
       },
     },

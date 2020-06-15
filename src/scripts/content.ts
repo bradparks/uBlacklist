@@ -249,14 +249,14 @@ function main(): void {
   }
 
   (async () => {
-    const options = await LocalStorage.load(
+    const options = await LocalStorage.load([
       'blacklist',
       'subscriptions',
       'hideControl',
       'hideBlockLinks',
       'skipBlockDialog',
       'enablePathDepth',
-    );
+    ]);
     onOptionsLoaded(options);
   })();
 

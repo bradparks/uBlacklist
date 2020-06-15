@@ -1,3 +1,8 @@
+import { main } from './options/main';
+
+main();
+
+/*
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { apis } from './apis';
@@ -18,9 +23,6 @@ function resultToString(result: Result): string {
 
 // #region Elements
 
-function $(id: 'blacklist'): HTMLTextAreaElement;
-function $(id: 'importBlacklist'): HTMLButtonElement;
-function $(id: 'saveBlacklist'): HTMLButtonElement;
 function $(id: 'engines'): HTMLUListElement;
 function $(id: 'hideBlockSiteLinks'): HTMLInputElement;
 function $(id: 'hideControl'): HTMLInputElement;
@@ -55,70 +57,7 @@ function $(id: string): HTMLElement | null {
   return document.getElementById(id) as HTMLElement | null;
 }
 
-const $blacklist = $('blacklist');
-
 // #endregion Elements
-
-// #region General
-
-function setupGeneralSection(
-  blacklist: string,
-  hideBlockLinks: boolean,
-  hideControl: boolean,
-  skipBlockDialog: boolean,
-): void {
-  $blacklist.value = blacklist;
-  $blacklist.addEventListener('input', () => {
-    $('saveBlacklist').disabled = false;
-  });
-  $('importBlacklist').addEventListener('click', () => {
-    $('importBlacklistDialog').classList.add('is-active');
-    $('importBlacklistDialog_blacklist').focus();
-    $('importBlacklistDialog_blacklist').value = '';
-  });
-  $('saveBlacklist').addEventListener('click', () => {
-    $('saveBlacklist').disabled = true;
-    sendMessage('set-blacklist', $blacklist.value);
-  });
-
-  $('importBlacklistDialog_background').addEventListener('click', () => {
-    $('importBlacklistDialog').classList.remove('is-active');
-  });
-  $('importBlacklistDialog_cancel').addEventListener('click', () => {
-    $('importBlacklistDialog').classList.remove('is-active');
-  });
-  $('importBlacklistDialog_import').addEventListener('click', () => {
-    const rules: string[] = [];
-    for (const domain of lines($('importBlacklistDialog_blacklist').value)) {
-      if (/^[^/*]+$/.test(domain)) {
-        rules.push(`*://*.${domain}/*`);
-      }
-    }
-    if (rules.length) {
-      $blacklist.value = unlines([...lines($blacklist.value), ...rules]);
-      $blacklist.scrollTop = $blacklist.scrollHeight;
-      $('saveBlacklist').disabled = false;
-    }
-    $('importBlacklistDialog').classList.remove('is-active');
-  });
-
-  $('hideBlockSiteLinks').checked = hideBlockLinks;
-  $('hideBlockSiteLinks').addEventListener('change', () => {
-    LocalStorage.store({ hideBlockLinks: $('hideBlockSiteLinks').checked });
-  });
-
-  $('hideControl').checked = hideControl;
-  $('hideControl').addEventListener('change', () => {
-    LocalStorage.store({ hideControl: $('hideControl').checked });
-  });
-
-  $('skipBlockDialog').checked = skipBlockDialog;
-  $('skipBlockDialog').addEventListener('change', () => {
-    LocalStorage.store({ skipBlockDialog: $('skipBlockDialog').checked });
-  });
-}
-
-// #endregion General
 
 // #region Engines
 
@@ -189,15 +128,11 @@ function setupSyncSection(sync: boolean, syncResult: Result | null): void {
   onSyncResultChanged(syncResult);
   $('turnOnSync').addEventListener('click', async () => {
     // #if CHROMIUM
-    /*
     // #else
     const granted = await apis.permissions.request({ origins: ['https://www.googleapis.com/*'] });
     if (!granted) {
       return;
     }
-    // #endif
-    // #if CHROMIUM
-    */
     // #endif
     const authed = await sendMessage('auth-to-sync-blacklist');
     if (!authed) {
@@ -377,37 +312,25 @@ async function main(): Promise<void> {
   }
 
   const {
-    blacklist,
-    hideBlockLinks,
-    hideControl,
-    skipBlockDialog,
     sync,
     syncResult,
     subscriptions,
   } = await LocalStorage.load(
-    'blacklist',
-    'hideBlockLinks',
-    'hideControl',
-    'skipBlockDialog',
     'sync',
     'syncResult',
     'subscriptions',
   );
-  setupGeneralSection(blacklist, hideBlockLinks, hideControl, skipBlockDialog);
   await setupEnginesSection();
   setupSyncSection(sync, syncResult);
   // #if CHROMIUM
-  /*
   // #else
   const { os } = await browser.runtime.getPlatformInfo();
   if (os === 'android') {
     $('syncSection').classList.add('is-hidden');
   }
   // #endif
-  // #if CHROMIUM
-  */
-  // #endif
   setupSubscriptionSection(subscriptions);
 }
 
 main();
+*/

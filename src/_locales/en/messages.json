@@ -35,7 +35,7 @@
   },
   "content_multipleSitesBlocked": {
     "message": "uBlacklist has blocked $COUNT$ sites",
-    "description": "The text that means multiple site have been blocked.",
+    "description": "The text that means multiple sites have been blocked.",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -97,7 +97,7 @@
   },
   "popup_siteBlockedBySubscription": {
     "message": "Blocked by $NAME$",
-    "description": "The text that means a site is blocked by a subscription.",
+    "description": "[UNUSED SINCE V3.1.0] The text that means a site is blocked by a subscription.",
     "placeholders": {
       "name": {
         "content": "$1",
@@ -114,8 +114,18 @@
     "description": "The label for the blacklist textarea."
   },
   "options_blacklistHelper": {
-    "message": "You can use <a href=\"https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" target=\"_blank\">match patterns</a> or <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions\" target=\"_blank\">regular expressions</a>.",
+    "message": "You can use [match patterns](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns) or [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions).",
     "description": "The helper text for the blacklist textarea."
+  },
+  "options_blacklistExample": {
+    "message": "Example: $EXAMPLE$",
+    "description": "The helper text to show an example rule.",
+    "placeholders": {
+      "example": {
+        "content": "$1",
+        "example": "*://*.example.com/*"
+      }
+    }
   },
   "options_importBlacklistButton": {
     "message": "Import from Personal Blocklist",
@@ -153,17 +163,17 @@
     "message": "Enabled",
     "description": "The text of the button to indicate that this extension is enabled on a search engine."
   },
-  "options_hideBlockSiteLinksLabel": {
+  "options_skipBlockDialogLabel": {
+    "message": "Skip the \"Block this site\" dialog",
+    "description": "The label for the switch whether to skip the 'Block this site' dialog"
+  },
+  "options_hideBlockLinksLabel": {
     "message": "Hide the 'Block this site' links",
     "description": "The label for the switch whether to hide the 'Block this site' links."
   },
-  "options_hideControl": {
+  "options_hideControlLabel": {
     "message": "Hide the number of blocked sites and the 'Show' link",
     "description": "The label for the switch whether to hide the number of blocked sites and the 'Show' link."
-  },
-  "options_skipBlockDialog": {
-    "message": "Skip the \"Block this site\" dialog",
-    "description": "The label for the switch whether to skip the 'Block this site' dialog"
   },
   "options_syncTitle": {
     "message": "Sync",

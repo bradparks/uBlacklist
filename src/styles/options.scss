@@ -1,22 +1,40 @@
+// Initial Variables
 $block-spacing: 1rem;
 $tablet: 600px;
+
+// Derived Variables
 $primary: #1a73e8;
+
+// Generic Variables
 // #if CHROMIUM
 $body-size: 13px;
 $body-min-width: 640px;
+/*
 // #else
 $body-size: 15px;
 // #endif
+// #if CHROMIUM
+*/
+// #endif
+
+// Layout
 $section-padding: 1.5rem;
+
+// Form
 $label-weight: normal;
 $help-size: 1rem;
+
+// Elements
 $title-size: 1.25rem;
 $title-weight: normal;
+
+// Components
 $dropdown-menu-min-width: 0;
-$switch-focus: none;
+$panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0.1);
 
 @import '~bulma/sass/utilities/_all.sass';
 @import '~bulma/sass/base/_all.sass';
+@import '~bulma/sass/helpers/_all.sass';
 @import '~bulma/sass/grid/columns.sass';
 @import '~bulma/sass/layout/section.sass';
 @import '~bulma/sass/form/shared.sass';
@@ -27,10 +45,11 @@ $switch-focus: none;
 @import '~bulma/sass/elements/table.sass';
 @import '~bulma/sass/elements/title.sass';
 @import '~bulma/sass/components/dropdown.sass';
-@import '~bulma/sass/components/list.sass';
 @import '~bulma/sass/components/modal.sass';
+@import '~bulma/sass/components/panel.sass';
 @import '~bulma-switch/dist/css/bulma-switch.sass';
 
+// Elements
 .button[disabled] {
   cursor: default;
 }
@@ -45,26 +64,26 @@ $switch-focus: none;
   }
 }
 
+// Components
 .dropdown-item {
   font-size: 1rem;
-}
-
-.list.is-inner {
-  box-shadow: none;
-  .list-item {
-    padding-right: 0;
-  }
 }
 
 .modal-content {
   width: 80%;
 }
 
+.panel-block > .section-item {
+  flex-grow: 1;
+}
+
+// Switch
 .switch-wrapper {
   height: 2.25rem;
   padding-top: 0.525rem;
 }
 
+// Subscription Section
 .subscription-name {
   width: 20%;
   word-break: break-word;

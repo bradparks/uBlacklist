@@ -87,7 +87,7 @@
     "message": "Выбранные сайты не будут отображаться в поисковой выдаче Google"
   },
   "options_blacklistHelper": {
-    "message": "Вы можете использовать <a href=\"https://developer.mozilla.org/ru/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" target=\"_blank\">шаблоны совпадения</a> или <a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Guide/Regular_Expressions\" target=\"_blank\">регулярные выражения</a>."
+    "message": "Вы можете использовать [шаблоны совпадения](https://developer.mozilla.org/ru/docs/Mozilla/Add-ons/WebExtensions/Match_patterns) или [регулярные выражения](https://developer.mozilla.org/ru/docs/Web/JavaScript/Guide/Regular_Expressions)."
   },
   "options_importBlacklistButton": {
     "message": "Импорт из расширения Personal Blocklist"
@@ -116,10 +116,10 @@
   "options_enabledOnSearchEngine": {
     "message": "Включено"
   },
-  "options_hideBlockSiteLinksLabel": {
+  "options_hideBlockLinksLabel": {
     "message": "Не показывать ссылки \"Заблокировать сайт\""
   },
-  "options_hideControl": {
+  "options_hideControlLabel": {
     "message": "Скрывать количество заблокированных сайтов и ссылку \"Показать\""
   },
   "options_syncTitle": {

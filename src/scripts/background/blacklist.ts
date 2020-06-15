@@ -148,7 +148,7 @@ export async function syncBlacklist(): Promise<void> {
         timestamp: localTimestamp,
         sync,
         syncInterval,
-      } = await LocalStorage.load('blacklist', 'timestamp', 'sync', 'syncInterval');
+      } = await LocalStorage.load(['blacklist', 'timestamp', 'sync', 'syncInterval']);
       if (!sync) {
         return;
       }

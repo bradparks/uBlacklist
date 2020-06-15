@@ -1,9 +1,9 @@
 {
-  "extensionDescription": {
-    "message": "指定したサイトが Google の検索結果で表示されないようにします"
-  },
   "extensionName": {
     "message": "uBlacklist"
+  },
+  "extensionDescription": {
+    "message": "指定したサイトが Google の検索結果で表示されないようにします"
   },
   "dayjsLocale": {
     "message": "ja"
@@ -87,7 +87,15 @@
     "message": "Google の検索結果で表示されないようにするサイト"
   },
   "options_blacklistHelper": {
-    "message": "<a href=\"https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" target=\"_blank\">マッチパターン</a>か<a href=\"https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Regular_Expressions\" target=\"_blank\">正規表現</a>が使用できます。"
+    "message": "[マッチパターン](https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Match_patterns)か[正規表現](https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Regular_Expressions)が使用できます。"
+  },
+  "options_blacklistExample": {
+    "message": "例: $EXAMPLE$",
+    "placeholders": {
+      "example": {
+        "content": "$1"
+      }
+    }
   },
   "options_importBlacklistButton": {
     "message": "Personal Blocklist からインポートする"
@@ -116,14 +124,14 @@
   "options_enabledOnSearchEngine": {
     "message": "有効"
   },
-  "options_hideBlockSiteLinksLabel": {
+  "options_skipBlockDialogLabel": {
+    "message": "「このサイトをブロックする」ダイアログを使用しない"
+  },
+  "options_hideBlockLinksLabel": {
     "message": "「このサイトをブロックする」リンクを表示しない"
   },
-  "options_hideControl": {
+  "options_hideControlLabel": {
     "message": "ブロックしたサイトの数と「表示する」リンクを表示しない"
-  },
-  "options_skipBlockDialog": {
-    "message": "「このサイトをブロックする」ダイアログを使用しない"
   },
   "options_syncTitle": {
     "message": "同期"
