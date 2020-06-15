@@ -1,12 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { apis } from '../apis';
+import { ENGINES } from '../engines';
 import * as LocalStorage from '../local-storage';
+import { sendMessage } from '../messages';
+import { Engine } from '../types';
 import { lines, unlines } from '../utilities';
 import { Section } from './section';
 import { Switch } from './switch';
 import { Dialog } from './dialog';
 import { I18n } from './i18n';
 import { InitialItems } from './initial-items';
+
+const enum BlacklistStatus {
+  Clean,
+  Dirty,
+  DirtyImport,
+}
 
 type ImportBlacklistDialogProps = {
   open: boolean;
@@ -78,12 +88,6 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
     </Dialog>
   );
 };
-
-const enum BlacklistStatus {
-  Clean,
-  Dirty,
-  DirtyImport,
-}
 
 const Blacklist: React.FC = () => {
   const { blacklist: initialBlacklist } = React.useContext(InitialItems);
@@ -170,6 +174,68 @@ type ItemSwitchProps = {
   label: string;
 };
 
+type SearchEngineProps = {
+  engine: Engine;
+};
+
+const SearchEngine: React.FC<SearchEngineProps> = props => {
+  const [enabled, setEnabled] = React.useState(false);
+  React.useEffect(() => {
+    (async () => {
+      const enabled = await apis.permissions.contains({ origins: props.engine.matches });
+      setEnabled(enabled);
+    })();
+  }, [props.engine]);
+  return (
+    <div className="columns is-vcentered">
+      <div className="column">
+        <label>{props.engine.name}</label>
+      </div>
+      <div className="column is-narrow">
+        {!enabled && (
+          <button
+            className="button is-primary"
+            onClick={async () => {
+              const enabled = await apis.permissions.request({ origins: props.engine.matches });
+              setEnabled(enabled);
+              if (enabled) {
+                sendMessage('enable-on-engine', props.engine);
+              }
+            }}
+          >
+            <I18n messageName="options_enableOnSearchEngine" />
+          </button>
+        )}
+        {enabled && (
+          <button className="button has-text-primary" disabled>
+            <I18n messageName="options_enabledOnSearchEngine" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const OtherSearchEngines: React.FC = () => {
+  return (
+    <>
+      <p>
+        <I18n messageName="options_otherSearchEngines" />
+      </p>
+      <p className="has-text-grey">
+        <I18n messageName="options_otherSearchEnginesDescription" />
+      </p>
+      <ul>
+        {ENGINES.map(engine => (
+          <li className="search-engine" key={engine.id}>
+            <SearchEngine engine={engine} />
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+};
+
 const ItemSwitch: React.FC<ItemSwitchProps> = props => {
   const { [props.itemKey]: initialItem } = React.useContext(InitialItems);
   const [item, setItem] = React.useState(initialItem);
@@ -188,6 +254,7 @@ const ItemSwitch: React.FC<ItemSwitchProps> = props => {
 export const GeneralSection: React.FC = () => (
   <Section title="options_generalTitle">
     <Blacklist />
+    <OtherSearchEngines />
     <ItemSwitch itemKey="skipBlockDialog" label="options_skipBlockDialogLabel" />
     <ItemSwitch itemKey="hideBlockLinks" label="options_hideBlockLinksLabel" />
     <ItemSwitch itemKey="hideControl" label="options_hideControlLabel" />

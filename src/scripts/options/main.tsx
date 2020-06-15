@@ -15,5 +15,5 @@ const Main: React.FC = () => {
 };
 
 export function main(): void {
-  ReactDOM.render(<Main />, document.getElementById('options'));
+  ReactDOM.render(<Main />, document.getElementById('main'));
 }

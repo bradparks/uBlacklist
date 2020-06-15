@@ -23,10 +23,6 @@ function resultToString(result: Result): string {
 
 // #region Elements
 
-function $(id: 'engines'): HTMLUListElement;
-function $(id: 'hideBlockSiteLinks'): HTMLInputElement;
-function $(id: 'hideControl'): HTMLInputElement;
-function $(id: 'skipBlockDialog'): HTMLInputElement;
 function $(id: 'syncSection'): HTMLElement;
 function $(id: 'turnOnSync'): HTMLButtonElement;
 function $(id: 'turnOffSync'): HTMLButtonElement;
@@ -58,52 +54,6 @@ function $(id: string): HTMLElement | null {
 }
 
 // #endregion Elements
-
-// #region Engines
-
-function onEngineEnabled(engine: Engine): void {
-  $(`enable${engine.id}`)!.classList.add('is-hidden');
-  $(`is${engine.id}Enabled`)!.classList.remove('is-hidden');
-}
-
-async function setupEnginesSection(): Promise<void> {
-  for (const engine of ENGINES) {
-    $('engines').insertAdjacentHTML(
-      'beforeend',
-      `
-<li class="list-item">
-  <div class="columns is-vcentered">
-    <div class="column">
-      <label for="enable${engine.id}">
-        <span>${engine.name}</span>
-      </label>
-    </div>
-    <div class="column is-narrow">
-      <button id="enable${engine.id}" class="button is-primary">
-        <span>${chrome.i18n.getMessage('options_enableOnSearchEngine')}</span>
-      </button>
-      <button id="is${
-        engine.id
-      }Enabled" disabled class="button has-text-primary is-disabled is-hidden">
-        <span>${chrome.i18n.getMessage('options_enabledOnSearchEngine')}</span>
-      </button>
-    </div>
-  </div>
-</li>`,
-    );
-    if (await apis.permissions.contains({ origins: engine.matches })) {
-      onEngineEnabled(engine);
-    }
-    $(`enable${engine.id}`)!.addEventListener('click', async () => {
-      if (await apis.permissions.request({ origins: engine.matches })) {
-        onEngineEnabled(engine);
-        sendMessage('enable-on-engine', engine);
-      }
-    });
-  }
-}
-
-// #endregion Engines
 
 // #region Sync
 

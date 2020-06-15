@@ -73,14 +73,25 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
   width: 80%;
 }
 
-.panel-block > .section-item {
-  flex-grow: 1;
+.panel-block {
+  padding: 0.5em 1em;
+  & > .section-item {
+    flex-grow: 1;
+  }
 }
 
 // Switch
 .switch-wrapper {
   height: 2.25rem;
   padding-top: 0.525rem;
+}
+
+// General Section
+.search-engine {
+  padding: 0.5em 0 0.5em 1em;
+  &:not(:last-child) {
+    border-bottom: 1px solid #ededed;
+  }
 }
 
 // Subscription Section
