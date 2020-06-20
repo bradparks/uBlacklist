@@ -1,14 +1,16 @@
 import React from 'react';
-import { apis } from '../apis';
+import { I18n } from './i18n';
 
 export type SectionProps = {
   title: string;
 };
 
-export const Section: React.FC<SectionProps> = props => {
-  return (
-    <section className="section">
-      <h1 className="title">{apis.i18n.getMessage(props.title)}</h1>
+export const Section: React.FC<SectionProps> = props => (
+  <section className="section">
+    <div className="container">
+      <h1 className="title">
+        <I18n messageName={props.title} />
+      </h1>
       <div className="panel">
         {React.Children.map(props.children, child => (
           <div className="panel-block">
@@ -16,6 +18,6 @@ export const Section: React.FC<SectionProps> = props => {
           </div>
         ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);

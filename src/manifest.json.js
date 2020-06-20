@@ -42,6 +42,7 @@ const manifest = {
     */
     chrome_style: false,
     // #endif
+    open_in_tab: true,
     page: 'options.html',
   },
   permissions: ['activeTab', 'alarms', 'identity', 'storage'],

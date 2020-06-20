@@ -150,7 +150,7 @@ const Blacklist: React.FC = () => {
               }
             }}
           />,
-          document.getElementById('importBlacklistDialog')!,
+          document.getElementById('importBlacklistDialogRoot')!,
         )}
         <div className="control">
           <button

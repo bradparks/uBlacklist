@@ -7,7 +7,7 @@ export type InitialItemsType = LocalStorage.ItemsFor<
 
 export const InitialItems = React.createContext({} as InitialItemsType);
 
-export function useInitialItems(): InitialItemsType | null {
+export const InitialItemsProvider: React.FC = props => {
   const [initialItems, setInitialItems] = React.useState<InitialItemsType | null>(null);
   React.useEffect(() => {
     (async () => {
@@ -20,5 +20,9 @@ export function useInitialItems(): InitialItemsType | null {
       setInitialItems(initialItems);
     })();
   }, []);
-  return initialItems;
-}
+  return (
+    initialItems && (
+      <InitialItems.Provider value={initialItems}>{props.children}</InitialItems.Provider>
+    )
+  );
+};

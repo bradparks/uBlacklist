@@ -6,16 +6,7 @@ $tablet: 600px;
 $primary: #1a73e8;
 
 // Generic Variables
-// #if CHROMIUM
 $body-size: 13px;
-$body-min-width: 640px;
-/*
-// #else
-$body-size: 15px;
-// #endif
-// #if CHROMIUM
-*/
-// #endif
 
 // Layout
 $section-padding: 1.5rem;
@@ -42,9 +33,11 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 @import '~bulma/sass/form/tools.sass';
 @import '~bulma/sass/elements/box.sass';
 @import '~bulma/sass/elements/button.sass';
+@import '~bulma/sass/elements/container.sass';
 @import '~bulma/sass/elements/table.sass';
 @import '~bulma/sass/elements/title.sass';
 @import '~bulma/sass/components/dropdown.sass';
+@import '~bulma/sass/components/menu.sass';
 @import '~bulma/sass/components/modal.sass';
 @import '~bulma/sass/components/panel.sass';
 @import '~bulma-switch/dist/css/bulma-switch.sass';
@@ -70,6 +63,7 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 }
 
 .modal-content {
+  max-width: 512px;
   width: 80%;
 }
 
@@ -84,6 +78,13 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 .switch-wrapper {
   height: 2.25rem;
   padding-top: 0.525rem;
+}
+
+// Main
+.main {
+  margin: 0 auto;
+  max-width: 640px;
+  width: 100%;
 }
 
 // General Section
