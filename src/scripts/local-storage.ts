@@ -1,37 +1,45 @@
 import dayjs from 'dayjs';
 import { apis } from './apis';
-import { ISOString, Minutes, Result, SubscriptionId, Subscriptions, TokenCache } from './types';
+import {
+  CloudStorageId,
+  CloudStorageToken,
+  Interval,
+  ISOString,
+  Result,
+  SubscriptionId,
+  Subscriptions,
+} from './types';
 
 export interface Items {
   blacklist: string;
+  cloudStorageId: CloudStorageId | null;
+  cloudStorageToken: CloudStorageToken | null;
   enablePathDepth: boolean;
   hideBlockLinks: boolean;
   hideControl: boolean;
-  skipBlockDialog: boolean;
   nextSubscriptionId: SubscriptionId;
+  skipBlockDialog: boolean;
   subscriptions: Subscriptions;
-  sync: boolean;
-  syncInterval: Minutes;
+  syncInterval: Interval;
   syncResult: Result | null;
   timestamp: ISOString;
-  tokenCache: TokenCache | null;
-  updateInterval: Minutes;
+  updateInterval: Interval;
 }
 
 const defaultItems: Items = {
   blacklist: '',
+  cloudStorageId: null,
+  cloudStorageToken: null,
   enablePathDepth: false,
   hideBlockLinks: false,
   hideControl: false,
-  skipBlockDialog: false,
   nextSubscriptionId: 0,
+  skipBlockDialog: false,
   subscriptions: {},
-  sync: false,
-  syncInterval: 5,
+  syncInterval: Interval.FiveMinutes,
   syncResult: null,
   timestamp: dayjs(0).toISOString(),
-  tokenCache: null,
-  updateInterval: 60,
+  updateInterval: Interval.OneHour,
 };
 
 export type ItemsFor<T extends (keyof Items)[]> = { [Key in T[number]]: Items[Key] };

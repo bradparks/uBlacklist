@@ -1,16 +1,17 @@
 import { apis } from './apis';
-import { Engine, Result, Subscription, SubscriptionId } from './types';
+import { CloudStorageId, Engine, Result, Subscription, SubscriptionId } from './types';
 
 interface MessageSignatures {
-  // Options/Popup -> Background
-  'auth-to-sync-blacklist': () => boolean;
+  // Content/Options/Popup -> Background
   'set-blacklist': (blacklist: string) => void;
   'sync-blacklist': () => void;
+  'connect-to-cloud-storage': (id: CloudStorageId) => void;
+  'disconnect-from-cloud-storage': () => void;
+  'enable-on-engine': (engine: Engine) => void;
   'add-subscription': (subscription: Subscription) => SubscriptionId;
   'remove-subscription': (id: SubscriptionId) => void;
   'update-subscription': (id: SubscriptionId) => void;
-  'update-subscriptions': () => void;
-  'enable-on-engine': (engine: Engine) => void;
+  'update-all-subscriptions': () => void;
   // Background -> Options
   'blacklist-syncing': () => void;
   'blacklist-synced': (result: Result) => void;
@@ -30,7 +31,9 @@ export function postMessage<Type extends MessageTypes>(
     try {
       await apis.runtime.sendMessage({ type, args });
     } catch (e) {
-      if (e.message !== 'Could not establish connection. Receiving end does not exist.') {
+      if (e.message === 'Could not establish connection. Receiving end does not exist.') {
+        return;
+      } else {
         throw e;
       }
     }

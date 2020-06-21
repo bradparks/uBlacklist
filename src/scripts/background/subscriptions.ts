@@ -1,13 +1,12 @@
-import { apis } from '../apis';
 import * as LocalStorage from '../local-storage';
 import { postMessage } from '../messages';
-import { Subscription, SubscriptionId } from '../types';
+import { Interval, Subscription, SubscriptionId } from '../types';
 import { Mutex, errorResult, successResult } from '../utilities';
 
 const mutex = new Mutex();
 const updating = new Set<SubscriptionId>();
 
-export async function addSubscription(subscription: Subscription): Promise<SubscriptionId> {
+export async function add(subscription: Subscription): Promise<SubscriptionId> {
   return await mutex.lock(async () => {
     const { subscriptions, nextSubscriptionId: id } = await LocalStorage.load([
       'subscriptions',
@@ -19,7 +18,7 @@ export async function addSubscription(subscription: Subscription): Promise<Subsc
   });
 }
 
-export async function removeSubscription(id: SubscriptionId): Promise<void> {
+export async function remove(id: SubscriptionId): Promise<void> {
   await mutex.lock(async () => {
     const { subscriptions } = await LocalStorage.load(['subscriptions']);
     delete subscriptions[id];
@@ -27,7 +26,7 @@ export async function removeSubscription(id: SubscriptionId): Promise<void> {
   });
 }
 
-export async function updateSubscription(id: SubscriptionId): Promise<void> {
+export async function update(id: SubscriptionId): Promise<void> {
   if (updating.has(id)) {
     return;
   }
@@ -68,15 +67,13 @@ export async function updateSubscription(id: SubscriptionId): Promise<void> {
   }
 }
 
-export async function updateSubscriptions(): Promise<void> {
+export async function updateAll(): Promise<Interval | null> {
   // Don't lock now.
   const { subscriptions, updateInterval } = await LocalStorage.load([
     'subscriptions',
     'updateInterval',
   ]);
   const ids = Object.keys(subscriptions).map(Number);
-  await Promise.all(ids.map(updateSubscription));
-  if (ids.length) {
-    apis.alarms.create('update-subscriptions', { delayInMinutes: updateInterval });
-  }
+  await Promise.all(ids.map(update));
+  return ids.length ? updateInterval : null;
 }

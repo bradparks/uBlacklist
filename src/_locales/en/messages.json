@@ -21,6 +21,10 @@
       }
     }
   },
+  "unauthorizedError": {
+    "message": "Unauthorized. Please turn sync off and on again.",
+    "description": "The error message shown when unauthorized to access a cloud storage."
+  },
   "cancelButton": {
     "message": "Cancel",
     "description": "The text of a cancel button."

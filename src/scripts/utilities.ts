@@ -1,3 +1,5 @@
+import Joi from '@hapi/joi';
+import dayjs from 'dayjs';
 import { ErrorResult, Result, SuccessResult } from './types';
 
 export class AltURL {
@@ -25,13 +27,14 @@ const enum SchemeMatch {
 
 const enum HostMatch {
   Any,
-  Partial,
+  Domain,
   Exact,
 }
 
 const enum PathMatch {
   Any,
-  PartialOrExact,
+  Prefix,
+  RegExp,
 }
 
 export class MatchPattern {
@@ -40,7 +43,7 @@ export class MatchPattern {
   private hostMatch: HostMatch;
   private host?: string;
   private pathMatch: PathMatch;
-  private path?: RegExp;
+  private path?: string | RegExp;
 
   constructor(mp: string) {
     const m = /^(\*|https?|ftp):\/\/(\*|(?:\*\.)?[^/*]+)(\/.*)$/.exec(mp);
@@ -57,7 +60,7 @@ export class MatchPattern {
     if (host === '*') {
       this.hostMatch = HostMatch.Any;
     } else if (host.startsWith('*.')) {
-      this.hostMatch = HostMatch.Partial;
+      this.hostMatch = HostMatch.Domain;
       this.host = host.slice(2);
     } else {
       this.hostMatch = HostMatch.Exact;
@@ -65,8 +68,11 @@ export class MatchPattern {
     }
     if (path === '/*') {
       this.pathMatch = PathMatch.Any;
+    } else if (path.indexOf('*') === path.length - 1) {
+      this.pathMatch = PathMatch.Prefix;
+      this.path = path.slice(0, -1);
     } else {
-      this.pathMatch = PathMatch.PartialOrExact;
+      this.pathMatch = PathMatch.RegExp;
       this.path = new RegExp(
         `^${path.replace(/[$^\\.+?()[\]{}|]/g, '\\$&').replace(/\*/g, '.*')}$`,
       );
@@ -74,7 +80,7 @@ export class MatchPattern {
   }
 
   test(url: AltURL): boolean {
-    if (this.hostMatch === HostMatch.Partial) {
+    if (this.hostMatch === HostMatch.Domain) {
       if (url.host !== this.host! && !url.host.endsWith(`.${this.host!}`)) {
         return false;
       }
@@ -92,8 +98,12 @@ export class MatchPattern {
         return false;
       }
     }
-    if (this.pathMatch === PathMatch.PartialOrExact) {
-      if (!this.path!.test(url.path)) {
+    if (this.pathMatch === PathMatch.Prefix) {
+      if (!url.path.startsWith(this.path as string)) {
+        return false;
+      }
+    } else if (this.pathMatch === PathMatch.RegExp) {
+      if (!(this.path as RegExp).test(url.path)) {
         return false;
       }
     }
@@ -121,7 +131,7 @@ export class Mutex {
   }
 
   private async dequeue(): Promise<void> {
-    if (this.queue.length === 0) {
+    if (!this.queue.length) {
       return;
     }
     await this.queue[0]();
@@ -149,10 +159,62 @@ export function errorResult(message: string): ErrorResult {
 export function successResult(): SuccessResult {
   return {
     type: 'success',
-    timestamp: new Date().toISOString(),
+    timestamp: dayjs().toISOString(),
   };
 }
 // #endregion Result
+
+// #region request
+export class HTTPError extends Error {
+  constructor(public status: number, public statusText: string) {
+    super(`${status} ${statusText}`);
+  }
+}
+
+export class BadResponse extends Error {
+  constructor() {
+    super('Bad response');
+  }
+}
+
+export async function request(input: RequestInfo, init?: RequestInit): Promise<void> {
+  const response = await fetch(input, init);
+  if (!response.ok) {
+    throw new HTTPError(response.status, response.statusText);
+  }
+}
+
+export async function requestJSON(input: RequestInfo, init?: RequestInit): Promise<unknown> {
+  const response = await fetch(input, init);
+  if (!response.ok) {
+    throw new HTTPError(response.status, response.statusText);
+  }
+  try {
+    return await response.json();
+  } catch {
+    throw new BadResponse();
+  }
+}
+
+export async function requestText(input: RequestInfo, init?: RequestInit): Promise<string> {
+  const response = await fetch(input, init);
+  if (!response.ok) {
+    throw new HTTPError(response.status, response.statusText);
+  }
+  try {
+    return await response.text();
+  } catch {
+    throw new BadResponse();
+  }
+}
+// #endregion request
+
+export function validate<T>(value: unknown, schema: Joi.Schema): asserts value is T {
+  const result = schema.validate(value, { allowUnknown: true });
+  if (result.error) {
+    throw result.error;
+  }
+}
 
 // #region string
 export function escapeHTML(s: string): string {

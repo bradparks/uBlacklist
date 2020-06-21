@@ -16,6 +16,9 @@
       }
     }
   },
+  "unauthorizedError": {
+    "message": "認証が解除されています。同期をオフにして、再度有効にして下さい。"
+  },
   "cancelButton": {
     "message": "キャンセル"
   },

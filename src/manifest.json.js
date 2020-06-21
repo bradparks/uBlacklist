@@ -12,6 +12,18 @@ const manifest = {
     },
     default_popup: 'popup.html',
   },
+  // #if CHROMIUM
+  /*
+  // #elif DEBUG
+  browser_specific_settings: {
+    gecko: {
+      id: '@ublacklist',
+    },
+  },
+  // #endif
+  // #if CHROMIUM
+  */
+  // #endif
   default_locale: 'en',
   description: '__MSG_extensionDescription__',
   icons: {
@@ -25,12 +37,6 @@ const manifest = {
   // #endif
   manifest_version: 2,
   name: '__MSG_extensionName__',
-  // #if CHROMIUM
-  oauth2: {
-    client_id: '304167046827-ordtvt68qt83fabg1k7blqeagicu68du.apps.googleusercontent.com',
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
-  },
-  // #endif
   optional_permissions: ['*://*/*'],
   options_ui: {
     // #if CHROMIUM
