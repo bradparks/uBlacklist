@@ -1,13 +1,5 @@
 import type dayjs from 'dayjs';
 
-export interface Engine {
-  id: string;
-  name: string;
-  matches: string[];
-}
-
-export type ISOString = string;
-
 export const enum Interval {
   FiveMinutes = 5,
   FifteenMinutes = 15,
@@ -17,7 +9,8 @@ export const enum Interval {
   FiveHours = 5 * 60,
 }
 
-// #region Result
+export type ISOString = string;
+
 export interface ErrorResult {
   type: 'error';
   message: string;
@@ -29,13 +22,12 @@ export interface SuccessResult {
 }
 
 export type Result = ErrorResult | SuccessResult;
-// #endregion Result
 
-// #region CloudStorage
-export type CloudStorageId = 'googleDrive';
+// #region CloudStorags
+export type CloudStorageId = 'googleDrive' | 'dropbox';
 
 export interface CloudStorage {
-  name: string;
+  messageName: string;
   hostPermissions: string[];
   authorize(): Promise<{ authorizationCode: string }>;
   getAccessToken(
@@ -61,9 +53,17 @@ export interface CloudStorageToken {
   expiresAt: dayjs.Dayjs;
   refreshToken: string;
 }
-// #endregion CloudStorage
+// #endregion CloudStorages
 
-// #region Subscription
+// #region SearchEngines
+export interface Engine {
+  id: string;
+  name: string;
+  matches: string[];
+}
+// #endregion SearchEngines
+
+// #region Subscriptions
 export type SubscriptionId = number;
 
 export interface Subscription {
@@ -74,4 +74,4 @@ export interface Subscription {
 }
 
 export type Subscriptions = Record<SubscriptionId, Subscription>;
-// #endregion Subscription
+// #endregion Subscriptions

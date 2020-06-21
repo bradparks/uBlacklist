@@ -90,7 +90,7 @@
     "message": "Google の検索結果で表示されないようにするサイト"
   },
   "options_blacklistHelper": {
-    "message": "[マッチパターン](https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Match_patterns)か[正規表現](https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Regular_Expressions)が使用できます。"
+    "message": "<a href=\"https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" noopener noreferrer target=\"_blank\">マッチパターン</a>か<a href=\"https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Regular_Expressions\" noopener noreferrer target=\"_blank\">正規表現</a>が使用できます。"
   },
   "options_blacklistExample": {
     "message": "例: $EXAMPLE$",
@@ -140,16 +140,27 @@
     "message": "同期"
   },
   "options_syncFeature": {
-    "message": "Google ドライブと同期する"
+    "message": "クラウドストレージと同期する"
   },
   "options_syncFeatureDescription": {
-    "message": "同期を有効にすると、ユーザーの Google ドライブにファイル 'uBlacklist.txt' が作成され、ユーザーのブラックリストと同期されます。"
+    "message": "同期を有効にすると、ユーザーのクラウドストレージにファイルが作成され、ユーザーのブラックリストと同期されます。"
   },
   "options_turnOnSync": {
     "message": "同期を有効にする"
   },
+  "options_turnOnSyncDialog_title": {
+    "message": "同期を有効にする"
+  },
+  "options_turnOnSyncDialog_turnOnSyncButton": {
+    "message": "有効にする"
+  },
   "options_syncTurnedOn": {
-    "message": "Google ドライブと同期しています"
+    "message": "$CLOUDSTORAGE$ と同期しています",
+    "placeholders": {
+      "cloudStorage": {
+        "content": "$1"
+      }
+    }
   },
   "options_turnOffSync": {
     "message": "オフにする"
@@ -216,5 +227,8 @@
   },
   "options_addSubscriptionDialog_addButton": {
     "message": "追加"
+  },
+  "cloudStorages_googleDrive": {
+    "message": "Google ドライブ"
   }
 }

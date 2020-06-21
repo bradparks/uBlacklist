@@ -15,13 +15,13 @@ export async function set(blacklist: string): Promise<void> {
 
 export async function sync(): Promise<Interval | null> {
   return await mutex.lock(async () => {
-    const { blacklist, timestamp, cloudStorageId, syncInterval } = await LocalStorage.load([
+    const { blacklist, timestamp, currentCloudStorageId, syncInterval } = await LocalStorage.load([
       'blacklist',
       'timestamp',
-      'cloudStorageId',
+      'currentCloudStorageId',
       'syncInterval',
     ]);
-    if (cloudStorageId == null) {
+    if (currentCloudStorageId == null) {
       return null;
     }
     postMessage('blacklist-syncing');

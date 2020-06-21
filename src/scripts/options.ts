@@ -23,11 +23,6 @@ function resultToString(result: Result): string {
 
 // #region Elements
 
-function $(id: 'syncSection'): HTMLElement;
-function $(id: 'turnOnSync'): HTMLButtonElement;
-function $(id: 'turnOffSync'): HTMLButtonElement;
-function $(id: 'syncResult'): HTMLSpanElement;
-function $(id: 'syncNow'): HTMLButtonElement;
 function $(id: 'subscriptions'): HTMLTableElement;
 function $(id: 'noSubscriptionAdded'): HTMLParagraphElement;
 function $(id: 'updateAllSubscriptions'): HTMLButtonElement;
@@ -54,63 +49,6 @@ function $(id: string): HTMLElement | null {
 }
 
 // #endregion Elements
-
-// #region Sync
-
-function onSyncChanged(sync: boolean): void {
-  for (const element of document.getElementsByClassName('is-hidden-sync-on')) {
-    element.classList.toggle('is-hidden', sync);
-  }
-  for (const element of document.getElementsByClassName('is-hidden-sync-off')) {
-    element.classList.toggle('is-hidden', !sync);
-  }
-  $('syncNow').disabled = !sync;
-}
-
-function onSyncResultChanged(syncResult: Result | null): void {
-  $('syncResult').textContent = syncResult
-    ? resultToString(syncResult)
-    : chrome.i18n.getMessage('options_syncNever');
-}
-
-function setupSyncSection(sync: boolean, syncResult: Result | null): void {
-  onSyncChanged(sync);
-  onSyncResultChanged(syncResult);
-  $('turnOnSync').addEventListener('click', async () => {
-    // #if CHROMIUM
-    // #else
-    const granted = await apis.permissions.request({ origins: ['https://www.googleapis.com/*'] });
-    if (!granted) {
-      return;
-    }
-    // #endif
-    const authed = await sendMessage('auth-to-sync-blacklist');
-    if (!authed) {
-      return;
-    }
-    onSyncChanged(true);
-    await LocalStorage.store({ sync: true });
-    sendMessage('sync-blacklist');
-  });
-  $('turnOffSync').addEventListener('click', async () => {
-    onSyncChanged(false);
-    await LocalStorage.store({ sync: false });
-  });
-  $('syncNow').addEventListener('click', () => {
-    sendMessage('sync-blacklist');
-  });
-
-  addMessageListeners({
-    'blacklist-syncing': () => {
-      $('syncResult').textContent = chrome.i18n.getMessage('options_syncRunning');
-    },
-    'blacklist-synced': result => {
-      onSyncResultChanged(result);
-    },
-  });
-}
-
-// #endregion Sync
 
 // #region Subscription
 

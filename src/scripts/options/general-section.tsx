@@ -4,13 +4,12 @@ import { apis } from '../apis';
 import { ENGINES } from '../engines';
 import * as LocalStorage from '../local-storage';
 import { sendMessage } from '../messages';
-import { Engine } from '../types';
+import type { Engine } from '../types';
 import { lines, unlines } from '../utilities';
+import { Dialog } from './dialog';
+import { InitialItems } from './initial-items';
 import { Section } from './section';
 import { Switch } from './switch';
-import { Dialog } from './dialog';
-import { I18n } from './i18n';
-import { InitialItems } from './initial-items';
 
 const enum BlacklistStatus {
   Clean,
@@ -32,15 +31,13 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
   return (
     <Dialog open={props.open} setOpen={props.setOpen}>
       <div className="field">
-        <h1 className="title">
-          <I18n messageName="options_importBlacklistDialog_title" />
-        </h1>
+        <h1 className="title">{apis.i18n.getMessage('options_importBlacklistDialog_title')}</h1>
       </div>
       <div className="field">
         <p className="help has-text-grey">
-          <I18n messageName="options_importBlacklistDialog_helper" />
+          {apis.i18n.getMessage('options_importBlacklistDialog_helper')}
           <br />
-          <I18n messageName="options_blacklistExample" substitutions="example.com" />
+          {apis.i18n.getMessage('options_blacklistExample', 'example.com')}
         </p>
       </div>
       <div className="field">
@@ -64,7 +61,7 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
               props.setOpen(false);
             }}
           >
-            <I18n messageName="cancelButton" />
+            {apis.i18n.getMessage('cancelButton')}
           </button>
         </div>
         <div className="control">
@@ -81,7 +78,7 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
               props.setOpen(false);
             }}
           >
-            <I18n messageName="options_importBlacklistDialog_importButton" />
+            {apis.i18n.getMessage('options_importBlacklistDialog_importButton')}
           </button>
         </div>
       </div>
@@ -103,15 +100,15 @@ const Blacklist: React.FC = () => {
   return (
     <>
       <div className="field">
-        <p>
-          <I18n messageName="options_blacklistLabel" />
-        </p>
+        <p>{apis.i18n.getMessage('options_blacklistLabel')}</p>
         <p className="help has-text-grey">
-          <I18n messageName="options_blacklistHelper" />
+          <span
+            dangerouslySetInnerHTML={{ __html: apis.i18n.getMessage('options_blacklistHelper') }}
+          />
           <br />
-          <I18n messageName="options_blacklistExample" substitutions="*://*.example.com/*" />
+          {apis.i18n.getMessage('options_blacklistExample', '*://*.example.com/*')}
           <br />
-          <I18n messageName="options_blacklistExample" substitutions="/example\.(net|org)/" />
+          {apis.i18n.getMessage('options_blacklistExample', '/example\\.(net|org)/')}
         </p>
       </div>
       <div className="field">
@@ -120,6 +117,7 @@ const Blacklist: React.FC = () => {
             className="textarea has-fixed-size"
             ref={blacklistTextArea}
             rows={10}
+            spellCheck={false}
             value={blacklist}
             onChange={e => {
               setBlacklist(e.target.value);
@@ -136,7 +134,7 @@ const Blacklist: React.FC = () => {
               setImportBlacklistDialogOpen(true);
             }}
           >
-            <I18n messageName="options_importBlacklistButton" />
+            {apis.i18n.getMessage('options_importBlacklistButton')}
           </button>
         </div>
         {ReactDOM.createPortal(
@@ -157,11 +155,11 @@ const Blacklist: React.FC = () => {
             className="button is-primary"
             disabled={blacklistStatus === BlacklistStatus.Clean}
             onClick={() => {
-              LocalStorage.store({ blacklist });
+              sendMessage('set-blacklist', blacklist);
               setBlacklistStatus(BlacklistStatus.Clean);
             }}
           >
-            <I18n messageName="options_saveBlacklistButton" />
+            {apis.i18n.getMessage('options_saveBlacklistButton')}
           </button>
         </div>
       </div>
@@ -175,40 +173,42 @@ type ItemSwitchProps = {
 };
 
 type SearchEngineProps = {
-  engine: Engine;
+  searchEngine: Engine;
 };
 
 const SearchEngine: React.FC<SearchEngineProps> = props => {
   const [enabled, setEnabled] = React.useState(false);
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     (async () => {
-      const enabled = await apis.permissions.contains({ origins: props.engine.matches });
+      const enabled = await apis.permissions.contains({ origins: props.searchEngine.matches });
       setEnabled(enabled);
     })();
-  }, [props.engine]);
+  }, [props.searchEngine]);
   return (
     <div className="columns is-vcentered">
       <div className="column">
-        <label>{props.engine.name}</label>
+        <label>{props.searchEngine.name}</label>
       </div>
       <div className="column is-narrow">
         {!enabled && (
           <button
             className="button is-primary"
             onClick={async () => {
-              const enabled = await apis.permissions.request({ origins: props.engine.matches });
+              const enabled = await apis.permissions.request({
+                origins: props.searchEngine.matches,
+              });
               setEnabled(enabled);
               if (enabled) {
-                sendMessage('enable-on-engine', props.engine);
+                sendMessage('enable-on-engine', props.searchEngine);
               }
             }}
           >
-            <I18n messageName="options_enableOnSearchEngine" />
+            {apis.i18n.getMessage('options_enableOnSearchEngine')}
           </button>
         )}
         {enabled && (
           <button className="button has-text-primary" disabled>
-            <I18n messageName="options_enabledOnSearchEngine" />
+            {apis.i18n.getMessage('options_enabledOnSearchEngine')}
           </button>
         )}
       </div>
@@ -216,19 +216,17 @@ const SearchEngine: React.FC<SearchEngineProps> = props => {
   );
 };
 
-const OtherSearchEngines: React.FC = () => {
+const SearchEngines: React.FC = () => {
   return (
     <>
-      <p>
-        <I18n messageName="options_otherSearchEngines" />
-      </p>
+      <p>{apis.i18n.getMessage('options_otherSearchEngines')}</p>
       <p className="has-text-grey">
-        <I18n messageName="options_otherSearchEnginesDescription" />
+        {apis.i18n.getMessage('options_otherSearchEnginesDescription')}
       </p>
       <ul>
         {ENGINES.map(engine => (
           <li className="search-engine" key={engine.id}>
-            <SearchEngine engine={engine} />
+            <SearchEngine searchEngine={engine} />
           </li>
         ))}
       </ul>
@@ -252,11 +250,17 @@ const ItemSwitch: React.FC<ItemSwitchProps> = props => {
 };
 
 export const GeneralSection: React.FC = () => (
-  <Section title="options_generalTitle">
+  <Section title={apis.i18n.getMessage('options_generalTitle')}>
     <Blacklist />
-    <OtherSearchEngines />
-    <ItemSwitch itemKey="skipBlockDialog" label="options_skipBlockDialogLabel" />
-    <ItemSwitch itemKey="hideBlockLinks" label="options_hideBlockLinksLabel" />
-    <ItemSwitch itemKey="hideControl" label="options_hideControlLabel" />
+    <SearchEngines />
+    <ItemSwitch
+      itemKey="skipBlockDialog"
+      label={apis.i18n.getMessage('options_skipBlockDialogLabel')}
+    />
+    <ItemSwitch
+      itemKey="hideBlockLinks"
+      label={apis.i18n.getMessage('options_hideBlockLinksLabel')}
+    />
+    <ItemSwitch itemKey="hideControl" label={apis.i18n.getMessage('options_hideControlLabel')} />
   </Section>
 );

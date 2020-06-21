@@ -2,7 +2,14 @@ import React from 'react';
 import * as LocalStorage from '../local-storage';
 
 export type InitialItemsType = LocalStorage.ItemsFor<
-  ['blacklist', 'skipBlockDialog', 'hideBlockLinks', 'hideControl']
+  [
+    'blacklist',
+    'skipBlockDialog',
+    'hideBlockLinks',
+    'hideControl',
+    'currentCloudStorageId',
+    'syncResult',
+  ]
 >;
 
 export const InitialItems = React.createContext({} as InitialItemsType);
@@ -16,6 +23,8 @@ export const InitialItemsProvider: React.FC = props => {
         'skipBlockDialog',
         'hideBlockLinks',
         'hideControl',
+        'currentCloudStorageId',
+        'syncResult',
       ]);
       setInitialItems(initialItems);
     })();

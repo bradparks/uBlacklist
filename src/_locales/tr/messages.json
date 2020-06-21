@@ -47,7 +47,7 @@
     "message": "Google arama sonuçlarında görünmesi engellenen siteler"
   },
   "options_blacklistHelper": {
-    "message": "[Eşleşme desenleri](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns) veya [düzenli ifadeler](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) kullanabilirsiniz."
+    "message": "<a href=\"https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" noopener noreferrer target=\"_blank\">Eşleşme desenleri</a> veya <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions\" noopener noreferrer target=\"_blank\">düzenli ifadeler</a> kullanabilirsiniz."
   },
   "options_importBlacklistButton": {
     "message": "Personal Blocklist'ten içe aktar"
@@ -60,12 +60,6 @@
   },
   "options_importBlacklistDialog_importButton": {
     "message": "İçe aktar"
-  },
-  "options_syncFeature": {
-    "message": "Google Drive ile senkronize et"
-  },
-  "options_syncFeatureDescription": {
-    "message": "Senkronizasyonu etkinleştirirseniz, Google Drive'ınızda 'uBlacklist.txt' adlı bir dosya oluşturulur ve yerel kara listenizle senkronize edilir."
   },
   "options_turnOnSync": {
     "message": "Senkronizasyonu etkinleştir"

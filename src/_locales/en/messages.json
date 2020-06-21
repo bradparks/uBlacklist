@@ -118,7 +118,7 @@
     "description": "The label for the blacklist textarea."
   },
   "options_blacklistHelper": {
-    "message": "You can use [match patterns](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns) or [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions).",
+    "message": "You can use <a href=\"https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Match_patterns\" noopener noreferrer target=\"_blank\">match patterns</a> or <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions\" noopener noreferrer target=\"_blank\">regular expressions</a>.",
     "description": "The helper text for the blacklist textarea."
   },
   "options_blacklistExample": {
@@ -184,20 +184,34 @@
     "description": "The title of the sync section."
   },
   "options_syncFeature": {
-    "message": "Sync with Google Drive",
+    "message": "Sync with a cloud storage",
     "description": "The sync feature."
   },
   "options_syncFeatureDescription": {
-    "message": "If you turn on sync, a file named 'uBlacklist.txt' will be created on your Google Drive and synchronized with your blacklist.",
+    "message": "If you turn on sync, a file will be created on your cloud storage and synchronized with your blacklist.",
     "description": "The description of the sync feature."
   },
   "options_turnOnSync": {
     "message": "Turn on sync",
     "description": "The text of the button to turn on sync."
   },
+  "options_turnOnSyncDialog_title": {
+    "message": "Turn on sync",
+    "description": "The title of the dialog to turn on sync."
+  },
+  "options_turnOnSyncDialog_turnOnSyncButton": {
+    "message": "Turn on",
+    "description": "The text of the button to turn on sync."
+  },
   "options_syncTurnedOn": {
-    "message": "Synced with Google Drive",
-    "description": "The text that means sync is turned on."
+    "message": "Synced with $CLOUDSTORAGE$",
+    "description": "The text that means sync with a cloud storage is turned on.",
+    "placeholders": {
+      "cloudStorage": {
+        "content": "$1",
+        "example": "Google Drive"
+      }
+    }
   },
   "options_turnOffSync": {
     "message": "Turn off",
@@ -286,5 +300,13 @@
   "options_addSubscriptionDialog_addButton": {
     "message": "Add",
     "description": "The text of the add button on the add-subscription dialog."
+  },
+  "cloudStorages_googleDrive": {
+    "message": "Google Drive",
+    "description": "The localized name of Google Drive"
+  },
+  "cloudStorages_dropbox": {
+    "message": "Dropbox",
+    "description": "The localized name of Dropbox"
   }
 }

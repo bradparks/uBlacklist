@@ -1,5 +1,4 @@
 import React from 'react';
-import { I18n } from './i18n';
 
 export interface SwitchProps {
   label: string;
@@ -15,9 +14,7 @@ export const Switch: React.FC<SwitchProps> = props => {
   return (
     <div className="columns is-vcentered">
       <div className="column">
-        <label htmlFor={id}>
-          <I18n messageName={props.label} />
-        </label>
+        <label htmlFor={id}>{props.label}</label>
       </div>
       <div className="column is-narrow">
         <div className="switch-wrapper">

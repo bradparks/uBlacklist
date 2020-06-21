@@ -12,8 +12,8 @@ import {
 
 export interface Items {
   blacklist: string;
-  cloudStorageId: CloudStorageId | null;
-  cloudStorageToken: CloudStorageToken | null;
+  currentCloudStorageId: CloudStorageId | null;
+  currentCloudStorageToken: CloudStorageToken | null;
   enablePathDepth: boolean;
   hideBlockLinks: boolean;
   hideControl: boolean;
@@ -28,8 +28,8 @@ export interface Items {
 
 const defaultItems: Items = {
   blacklist: '',
-  cloudStorageId: null,
-  cloudStorageToken: null,
+  currentCloudStorageId: null,
+  currentCloudStorageToken: null,
   enablePathDepth: false,
   hideBlockLinks: false,
   hideControl: false,

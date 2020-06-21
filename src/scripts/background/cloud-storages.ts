@@ -9,7 +9,7 @@ const mutex = new Mutex();
 
 export async function connect(id: CloudStorageId): Promise<void> {
   return mutex.lock(async () => {
-    const { cloudStorageId: oldId } = await LocalStorage.load(['cloudStorageId']);
+    const { currentCloudStorageId: oldId } = await LocalStorage.load(['currentCloudStorageId']);
     if (oldId != null) {
       throw new Error('Already connected');
     }
@@ -17,8 +17,8 @@ export async function connect(id: CloudStorageId): Promise<void> {
     const { authorizationCode } = await cloudStorage.authorize();
     const token = await cloudStorage.getAccessToken(authorizationCode);
     await LocalStorage.store({
-      cloudStorageId: id,
-      cloudStorageToken: {
+      currentCloudStorageId: id,
+      currentCloudStorageToken: {
         accessToken: token.accessToken,
         expiresAt: dayjs().add(token.expiresIn, 'second'),
         refreshToken: token.refreshToken,
@@ -29,9 +29,9 @@ export async function connect(id: CloudStorageId): Promise<void> {
 
 export async function disconnect(): Promise<void> {
   return mutex.lock(async () => {
-    const { cloudStorageId: id, cloudStorageToken: token } = await LocalStorage.load([
-      'cloudStorageId',
-      'cloudStorageToken',
+    const { currentCloudStorageId: id, currentCloudStorageToken: token } = await LocalStorage.load([
+      'currentCloudStorageId',
+      'currentCloudStorageToken',
     ]);
     if (id == null) {
       throw new Error('Not connected');
@@ -44,7 +44,7 @@ export async function disconnect(): Promise<void> {
         // Ignore any exception
       }
     }
-    await LocalStorage.store({ cloudStorageId: null, cloudStorageToken: null });
+    await LocalStorage.store({ currentCloudStorageId: null, currentCloudStorageToken: null });
   });
 }
 
@@ -53,9 +53,9 @@ export async function syncFile(
   modifiedTime: dayjs.Dayjs,
 ): Promise<{ content: string; modifiedTime: dayjs.Dayjs } | null> {
   return await mutex.lock(async () => {
-    const { cloudStorageId: id, cloudStorageToken: token } = await LocalStorage.load([
-      'cloudStorageId',
-      'cloudStorageToken',
+    const { currentCloudStorageId: id, currentCloudStorageToken: token } = await LocalStorage.load([
+      'currentCloudStorageId',
+      'currentCloudStorageToken',
     ]);
     if (id == null) {
       throw new Error('Not connected');
@@ -69,10 +69,10 @@ export async function syncFile(
         const newToken = await cloudStorage.refreshAccessToken(token.refreshToken);
         token.accessToken = newToken.accessToken;
         token.expiresAt = dayjs().add(newToken.expiresIn, 'second');
-        await LocalStorage.store({ cloudStorageToken: token });
+        await LocalStorage.store({ currentCloudStorageToken: token });
       } catch (e) {
         if (e instanceof HTTPError && e.status === 400) {
-          await LocalStorage.store({ cloudStorageToken: null });
+          await LocalStorage.store({ currentCloudStorageToken: null });
           throw new Error(apis.i18n.getMessage('unauthorizedError'));
         } else {
           throw e;

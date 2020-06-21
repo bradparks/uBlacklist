@@ -10,7 +10,7 @@ const FILENAME = 'uBlacklist.txt';
 const MULTIPART_RELATED_BOUNDARY = '----------uBlacklistMultipartRelatedBoundaryJMPRhmg2VV4JBuua';
 
 export const googleDrive: CloudStorage = {
-  name: 'Google Drive',
+  messageName: 'cloudStorages_googleDrive',
 
   hostPermissions: [
     // #if CHROMIUM
