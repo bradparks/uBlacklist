@@ -1,13 +1,13 @@
 import { apis } from './apis';
-import { CloudStorageId, Engine, Result, Subscription, SubscriptionId } from './types';
+import { CloudId, SearchEngine, Result, Subscription, SubscriptionId } from './types';
 
 interface MessageSignatures {
   // Content/Options/Popup -> Background
   'set-blacklist': (blacklist: string) => void;
   'sync-blacklist': () => void;
-  'connect-to-cloud-storage': (id: CloudStorageId) => void;
-  'disconnect-from-cloud-storage': () => void;
-  'enable-on-engine': (engine: Engine) => void;
+  'connect-to-cloud': (id: CloudId) => boolean;
+  'disconnect-from-cloud': () => void;
+  'register-search-engine': (searchEngine: SearchEngine) => void;
   'add-subscription': (subscription: Subscription) => SubscriptionId;
   'remove-subscription': (id: SubscriptionId) => void;
   'update-subscription': (id: SubscriptionId) => void;

@@ -8,9 +8,6 @@
   "dayjsLocale": {
     "message": "tr"
   },
-  "cancelButton": {
-    "message": "Cancel"
-  },
   "okButton": {
     "message": "Tamam"
   },
@@ -63,5 +60,11 @@
   },
   "options_turnOnSync": {
     "message": "Senkronizasyonu etkinleştir"
+  },
+  "clouds_googleDriveSync": {
+    "message": "Google Drive ile senkronize et"
+  },
+  "clouds_dropboxSync": {
+    "message": "Dropbox ile senkronize et"
   }
 }

@@ -23,7 +23,7 @@
   },
   "unauthorizedError": {
     "message": "Unauthorized. Please turn sync off and on again.",
-    "description": "The error message shown when unauthorized to access a cloud storage."
+    "description": "The error message shown when unauthorized to access a cloud."
   },
   "cancelButton": {
     "message": "Cancel",
@@ -99,16 +99,6 @@
     "message": "Unblock",
     "description": "The text of the button to unblock a site."
   },
-  "popup_siteBlockedBySubscription": {
-    "message": "Blocked by $NAME$",
-    "description": "[UNUSED SINCE V3.1.0] The text that means a site is blocked by a subscription.",
-    "placeholders": {
-      "name": {
-        "content": "$1",
-        "example": "Example Blacklist"
-      }
-    }
-  },
   "options_generalTitle": {
     "message": "General",
     "description": "The title of the general section."
@@ -130,6 +120,14 @@
         "example": "*://*.example.com/*"
       }
     }
+  },
+  "options_blacklistUpdated": {
+    "message": "Updated.",
+    "description": "The text indicating that the blacklist is update outside the options page."
+  },
+  "options_reloadBlacklistButton": {
+    "message": "Reload",
+    "description": "The text of the button to reload the blacklist."
   },
   "options_importBlacklistButton": {
     "message": "Import from Personal Blocklist",
@@ -159,11 +157,11 @@
     "message": "You can use this extension on the below search engines.",
     "description": "The details for other search engines support."
   },
-  "options_enableOnSearchEngine": {
+  "options_registerSearchEngine": {
     "message": "Enable",
     "description": "The text of the button to enable this extension on a search engine."
   },
-  "options_enabledOnSearchEngine": {
+  "options_searchEngineRegistered": {
     "message": "Enabled",
     "description": "The text of the button to indicate that this extension is enabled on a search engine."
   },
@@ -184,11 +182,11 @@
     "description": "The title of the sync section."
   },
   "options_syncFeature": {
-    "message": "Sync with a cloud storage",
+    "message": "Sync with a cloud",
     "description": "The sync feature."
   },
   "options_syncFeatureDescription": {
-    "message": "If you turn on sync, a file will be created on your cloud storage and synchronized with your blacklist.",
+    "message": "You can synchronize blacklists across your devices through a cloud.",
     "description": "The description of the sync feature."
   },
   "options_turnOnSync": {
@@ -202,16 +200,6 @@
   "options_turnOnSyncDialog_turnOnSyncButton": {
     "message": "Turn on",
     "description": "The text of the button to turn on sync."
-  },
-  "options_syncTurnedOn": {
-    "message": "Synced with $CLOUDSTORAGE$",
-    "description": "The text that means sync with a cloud storage is turned on.",
-    "placeholders": {
-      "cloudStorage": {
-        "content": "$1",
-        "example": "Google Drive"
-      }
-    }
   },
   "options_turnOffSync": {
     "message": "Turn off",
@@ -232,6 +220,10 @@
   "options_syncNowButton": {
     "message": "Sync now",
     "description": "The text of the button to sync now."
+  },
+  "options_syncInterval": {
+    "message": "Sync interval",
+    "description": "The label of the select to select a sync interval."
   },
   "options_subscriptionTitle": {
     "message": "Subscription",
@@ -301,12 +293,36 @@
     "message": "Add",
     "description": "The text of the add button on the add-subscription dialog."
   },
-  "cloudStorages_googleDrive": {
-    "message": "Google Drive",
-    "description": "The localized name of Google Drive"
+  "clouds_googleDriveSync": {
+    "message": "Sync with Google Drive",
+    "description": "The label of the radio button to sync with Google Drive."
   },
-  "cloudStorages_dropbox": {
-    "message": "Dropbox",
-    "description": "The localized name of Dropbox"
+  "clouds_googleDriveSyncDescription": {
+    "message": "A file will be created within the application data folder hidden from the user.",
+    "description": "The text to describe the behavior of sync with Google Drive."
+  },
+  "clouds_googleDriveSyncTurnedOn": {
+    "message": "Synced with Google Drive",
+    "description": "The text indicating that sync with Google Drive is turned on."
+  },
+  "clouds_dropboxSync": {
+    "message": "Sync with Dropbox",
+    "description": "The text indicating syncing with Dropbox."
+  },
+  "clouds_dropboxSyncDescription": {
+    "message": "A file named \"uBlacklist.txt\" will be created within \"/Apps/uBlacklist/\".",
+    "description": "The text to describe the behavior of sync with Dropbox."
+  },
+  "clouds_dropboxSyncTurnedOn": {
+    "message": "Synced with Dropbox",
+    "description": "The label of the radio button to sync with Dropbox."
+  },
+  "searchEngines_duckduckgoName": {
+    "message": "DuckDuckGo",
+    "description": "The localized name of DuckDuckGo"
+  },
+  "searchEngines_startpageName": {
+    "message": "Startpage.com",
+    "description": "The localized name of Startpage.com"
   }
 }

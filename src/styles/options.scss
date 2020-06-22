@@ -31,6 +31,7 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 @import '~bulma/sass/form/shared.sass';
 @import '~bulma/sass/form/checkbox-radio.sass';
 @import '~bulma/sass/form/input-textarea.sass';
+@import '~bulma/sass/form/select.sass';
 @import '~bulma/sass/form/tools.sass';
 @import '~bulma/sass/elements/box.sass';
 @import '~bulma/sass/elements/button.sass';
@@ -44,14 +45,8 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 @import '~bulma-switch/dist/css/bulma-switch.sass';
 
 // Form
-.radio-wrapper {
+.field.is-grouped.is-vcentered {
   align-items: center;
-  display: flex;
-  height: 32px;
-}
-
-.radio-label-wrapper {
-  margin-left: 12px;
 }
 
 // Elements
@@ -77,6 +72,9 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 .modal-content {
   max-width: 480px;
   width: 75%;
+  &.box {
+    color: #363636;
+  }
 }
 
 .panel-block {
@@ -100,7 +98,15 @@ $panel-shadow: 0 2px 3px rgba(hsl(0, 0, 4), 0.1), 0 0 0 1px rgba(hsl(0, 0, 4), 0
 }
 
 // General Section
-.search-engine {
+.reload-blacklist-button {
+  color: $link;
+  cursor: pointer;
+  &:hover {
+    color: $link-hover;
+  }
+}
+
+.register-search-engine {
   padding: 0.5em 0 0.5em 1em;
   &:not(:last-child) {
     border-bottom: 1px solid #ededed;

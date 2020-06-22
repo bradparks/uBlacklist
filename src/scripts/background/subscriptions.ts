@@ -1,6 +1,6 @@
 import * as LocalStorage from '../local-storage';
 import { postMessage } from '../messages';
-import { Interval, Subscription, SubscriptionId } from '../types';
+import { Subscription, SubscriptionId } from '../types';
 import { Mutex, errorResult, successResult } from '../utilities';
 
 const mutex = new Mutex();
@@ -67,7 +67,7 @@ export async function update(id: SubscriptionId): Promise<void> {
   }
 }
 
-export async function updateAll(): Promise<Interval | null> {
+export async function updateAll(): Promise<number | null> {
   // Don't lock now.
   const { subscriptions, updateInterval } = await LocalStorage.load([
     'subscriptions',

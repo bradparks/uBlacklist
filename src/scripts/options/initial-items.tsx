@@ -7,8 +7,9 @@ export type InitialItemsType = LocalStorage.ItemsFor<
     'skipBlockDialog',
     'hideBlockLinks',
     'hideControl',
-    'currentCloudStorageId',
+    'syncCloudId',
     'syncResult',
+    'syncInterval',
   ]
 >;
 
@@ -23,8 +24,9 @@ export const InitialItemsProvider: React.FC = props => {
         'skipBlockDialog',
         'hideBlockLinks',
         'hideControl',
-        'currentCloudStorageId',
+        'syncCloudId',
         'syncResult',
+        'syncInterval',
       ]);
       setInitialItems(initialItems);
     })();

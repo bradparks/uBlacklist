@@ -110,10 +110,10 @@
   "options_otherSearchEnginesDescription": {
     "message": "你可以開啟以下網站的支援，請注意你必須允許此擴充功能存取你要支援的網站"
   },
-  "options_enableOnSearchEngine": {
+  "options_registerSearchEngine": {
     "message": "啟用"
   },
-  "options_enabledOnSearchEngine": {
+  "options_searchEngineRegistered": {
     "message": "已啟用"
   },
   "options_hideBlockLinksLabel": {
@@ -190,5 +190,17 @@
   },
   "options_addSubscriptionDialog_addButton": {
     "message": "加入"
+  },
+  "clouds_googleDriveSync": {
+    "message": "與 Google Drive 同步"
+  },
+  "clouds_googleDriveSyncTurnedOn": {
+    "message": "已與 Google Drive 同步"
+  },
+  "clouds_dropboxSync": {
+    "message": "與 Dropbox 同步"
+  },
+  "clouds_dropboxSyncTurnedOn": {
+    "message": "已與 Dropbox 同步"
   }
 }

@@ -75,14 +75,6 @@
   "popup_unblockSiteButton": {
     "message": "ブロックを解除"
   },
-  "popup_siteBlockedBySubscription": {
-    "message": "$NAME$ によりブロックされています",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
-  },
   "options_generalTitle": {
     "message": "一般"
   },
@@ -99,6 +91,12 @@
         "content": "$1"
       }
     }
+  },
+  "options_blacklistUpdated": {
+    "message": "更新されています。"
+  },
+  "options_reloadBlacklistButton": {
+    "message": "再読み込み"
   },
   "options_importBlacklistButton": {
     "message": "Personal Blocklist からインポートする"
@@ -121,10 +119,10 @@
   "options_otherSearchEnginesDescription": {
     "message": "Google 以外の検索エンジンでもこの拡張機能を使用できるようにします。"
   },
-  "options_enableOnSearchEngine": {
+  "options_registerSearchEngine": {
     "message": "有効にする"
   },
-  "options_enabledOnSearchEngine": {
+  "options_searchEngineRegistered": {
     "message": "有効"
   },
   "options_skipBlockDialogLabel": {
@@ -140,10 +138,10 @@
     "message": "同期"
   },
   "options_syncFeature": {
-    "message": "クラウドストレージと同期する"
+    "message": "クラウドと同期する"
   },
   "options_syncFeatureDescription": {
-    "message": "同期を有効にすると、ユーザーのクラウドストレージにファイルが作成され、ユーザーのブラックリストと同期されます。"
+    "message": "クラウドを通して、複数の端末でブラックリストを同期することができます。"
   },
   "options_turnOnSync": {
     "message": "同期を有効にする"
@@ -153,14 +151,6 @@
   },
   "options_turnOnSyncDialog_turnOnSyncButton": {
     "message": "有効にする"
-  },
-  "options_syncTurnedOn": {
-    "message": "$CLOUDSTORAGE$ と同期しています",
-    "placeholders": {
-      "cloudStorage": {
-        "content": "$1"
-      }
-    }
   },
   "options_turnOffSync": {
     "message": "オフにする"
@@ -176,6 +166,9 @@
   },
   "options_syncNowButton": {
     "message": "今すぐ同期"
+  },
+  "options_syncInterval": {
+    "message": "同期の間隔"
   },
   "options_subscriptionTitle": {
     "message": "購読"
@@ -228,7 +221,22 @@
   "options_addSubscriptionDialog_addButton": {
     "message": "追加"
   },
-  "cloudStorages_googleDrive": {
-    "message": "Google ドライブ"
+  "clouds_googleDriveSync": {
+    "message": "Google ドライブと同期する"
+  },
+  "clouds_googleDriveSyncDescription": {
+    "message": "非表示のアプリデータフォルダにファイルが作成されます。"
+  },
+  "clouds_googleDriveSyncTurnedOn": {
+    "message": "Google ドライブと同期しています"
+  },
+  "clouds_dropboxSync": {
+    "message": "Dropbox と同期する"
+  },
+  "clouds_dropboxSyncDescription": {
+    "message": "フォルダ \"/アプリ/uBlacklist/\" にファイル \"uBlacklist.txt\" が作成されます。"
+  },
+  "clouds_dropboxSyncTurnedOn": {
+    "message": "Dropbox と同期しています"
   }
 }

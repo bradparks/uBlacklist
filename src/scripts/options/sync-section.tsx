@@ -1,28 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { apis } from '../apis';
-import { CLOUD_STORAGES } from '../cloud-storages';
+import * as LocalStorage from '../local-storage';
+import { supportedClouds } from '../supported-clouds';
 import { addMessageListeners, sendMessage } from '../messages';
-import type { CloudStorageId, Result } from '../types';
-import { isErrorResult } from '../utilities';
+import type { CloudId } from '../types';
 import { dayjs } from './dayjs';
 import { Dialog } from './dialog';
 import { InitialItems } from './initial-items';
 import { Section } from './section';
+import { ShowResult } from './show-result';
 
 interface TurnOnSyncDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setCurrentCloudStorageId: (currentCloudStorageId: CloudStorageId) => void;
+  setSyncCloudId: (syncCloudId: CloudId) => void;
 }
 
 const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
-  const [currentCloudStorageId, setCurrentCloudStorageId] = React.useState<CloudStorageId>(
-    'googleDrive',
-  );
+  const [syncCloudId, setSyncCloudId] = React.useState<CloudId>('googleDrive');
   React.useLayoutEffect(() => {
     if (props.open) {
-      setCurrentCloudStorageId('googleDrive');
+      setSyncCloudId('googleDrive');
     }
   }, [props.open]);
   return (
@@ -30,26 +29,29 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
       <div className="field">
         <h1 className="title">{apis.i18n.getMessage('options_turnOnSyncDialog_title')}</h1>
       </div>
-      <div className="field">
-        {React.Children.map(Object.keys(CLOUD_STORAGES) as CloudStorageId[], cloudStorageId => (
-          <div className="radio-wrapper">
+      {React.Children.map(Object.keys(supportedClouds) as CloudId[], cloudId => (
+        <div className="field is-grouped is-vcentered">
+          <div className="control">
             <input
-              id={cloudStorageId}
+              id={cloudId}
               type="radio"
-              name="currentCloudStorageId"
-              checked={currentCloudStorageId === cloudStorageId}
+              name="syncCloudId"
+              checked={syncCloudId === cloudId}
               onChange={e => {
                 if (e.currentTarget.checked) {
-                  setCurrentCloudStorageId(cloudStorageId);
+                  setSyncCloudId(cloudId);
                 }
               }}
             />
-            <label className="radio-label-wrapper" htmlFor={cloudStorageId}>
-              {apis.i18n.getMessage(CLOUD_STORAGES[cloudStorageId].messageName)}
-            </label>
           </div>
-        ))}
-      </div>
+          <label htmlFor={cloudId}>
+            <p>{apis.i18n.getMessage(supportedClouds[cloudId].messageNames.sync)}</p>
+            <p className="has-text-grey">
+              {apis.i18n.getMessage(supportedClouds[cloudId].messageNames.syncDescription)}
+            </p>
+          </label>
+        </div>
+      ))}
       <div className="field is-grouped is-grouped-right">
         <div className="control">
           <button
@@ -67,17 +69,16 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
             onClick={() => {
               (async () => {
                 const granted = await apis.permissions.request({
-                  origins: CLOUD_STORAGES[currentCloudStorageId].hostPermissions,
+                  origins: supportedClouds[syncCloudId].hostPermissions,
                 });
                 if (!granted) {
                   return;
                 }
-                try {
-                  await sendMessage('connect-to-cloud-storage', currentCloudStorageId);
-                } catch {
+                const connected = await sendMessage('connect-to-cloud', syncCloudId);
+                if (!connected) {
                   return;
                 }
-                props.setCurrentCloudStorageId(currentCloudStorageId);
+                props.setSyncCloudId(syncCloudId);
                 props.setOpen(false);
               })();
             }}
@@ -91,20 +92,43 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
 };
 
 interface TurnOnSyncProps {
-  currentCloudStorageId: CloudStorageId | null;
-  setCurrentCloudStorageId: (currentCloudStorageId: CloudStorageId | null) => void;
+  syncCloudId: CloudId | null;
+  setSyncCloudId: (syncCloudId: CloudId | null) => void;
 }
 
 const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
   const [turnOnSyncDialogOpen, setTurnOnSyncDialogOpen] = React.useState(false);
-  if (props.currentCloudStorageId == null) {
+  if (props.syncCloudId != null) {
     return (
-      <div className="columns is-vcentered">
-        <div className="column">
+      <div className="field is-grouped is-vcentered">
+        <div className="control is-expanded">
+          <p>
+            {apis.i18n.getMessage(supportedClouds[props.syncCloudId].messageNames.syncTurnedOn)}
+          </p>
+        </div>
+        <div className="control">
+          <button
+            className="button has-text-primary"
+            onClick={() => {
+              (async () => {
+                await sendMessage('disconnect-from-cloud');
+                props.setSyncCloudId(null);
+              })();
+            }}
+          >
+            {apis.i18n.getMessage('options_turnOffSync')}
+          </button>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="field is-grouped is-vcentered">
+        <div className="control is-expanded">
           <p>{apis.i18n.getMessage('options_syncFeature')}</p>
           <p className="has-text-grey">{apis.i18n.getMessage('options_syncFeatureDescription')}</p>
         </div>
-        <div className="column is-narrow">
+        <div className="control">
           <button
             className="button is-primary"
             onClick={() => {
@@ -117,54 +141,18 @@ const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
             <TurnOnSyncDialog
               open={turnOnSyncDialogOpen}
               setOpen={setTurnOnSyncDialogOpen}
-              setCurrentCloudStorageId={props.setCurrentCloudStorageId}
+              setSyncCloudId={props.setSyncCloudId}
             />,
             document.getElementById('turnOnSyncDialogRoot')!,
           )}
         </div>
       </div>
     );
-  } else {
-    return (
-      <div className="columns is-vcentered">
-        <div className="column">
-          <p>
-            {apis.i18n.getMessage(
-              'options_syncTurnedOn',
-              apis.i18n.getMessage(CLOUD_STORAGES[props.currentCloudStorageId].messageName),
-            )}
-          </p>
-        </div>
-        <div className="column is-narrow">
-          <button
-            className="button has-text-primary"
-            onClick={() => {
-              (async () => {
-                await sendMessage('disconnect-from-cloud-storage');
-                props.setCurrentCloudStorageId(null);
-              })();
-            }}
-          >
-            {apis.i18n.getMessage('options_turnOffSync')}
-          </button>
-        </div>
-      </div>
-    );
   }
 };
 
-function syncResultToString(syncResult: Result | null) {
-  if (syncResult == null) {
-    return apis.i18n.getMessage('options_syncNever');
-  } else if (isErrorResult(syncResult)) {
-    return apis.i18n.getMessage('error', syncResult.message);
-  } else {
-    return dayjs(syncResult.timestamp).fromNow();
-  }
-}
-
 interface SyncNowProps {
-  currentCloudStorageId: CloudStorageId | null;
+  syncCloudId: CloudId | null;
 }
 
 const SyncNow: React.FC<SyncNowProps> = props => {
@@ -183,17 +171,23 @@ const SyncNow: React.FC<SyncNowProps> = props => {
     });
   }, []);
   return (
-    <div className="columns is-vcentered">
-      <div className="column">
+    <div className="field is-grouped is-vcentered">
+      <div className="control is-expanded">
         <p>{apis.i18n.getMessage('options_syncResult')}</p>
         <p className="has-text-grey">
-          {syncing ? apis.i18n.getMessage('options_syncRunning') : syncResultToString(syncResult)}
+          {syncing ? (
+            apis.i18n.getMessage('options_syncRunning')
+          ) : props.syncCloudId != null && syncResult ? (
+            <ShowResult result={syncResult} />
+          ) : (
+            apis.i18n.getMessage('options_syncNever')
+          )}
         </p>
       </div>
-      <div className="column is-narrow">
+      <div className="control">
         <button
           className="button has-text-primary"
-          disabled={props.currentCloudStorageId == null || syncing}
+          disabled={props.syncCloudId == null || syncing}
           onClick={() => {
             sendMessage('sync-blacklist');
           }}
@@ -205,11 +199,43 @@ const SyncNow: React.FC<SyncNowProps> = props => {
   );
 };
 
+export const SetSyncInterval: React.FC = () => {
+  const initialItems = React.useContext(InitialItems);
+  const [syncInterval, setSyncInterval] = React.useState(initialItems.syncInterval);
+  return (
+    <div className="field is-grouped is-vcentered">
+      <div className="control is-expanded">
+        <label htmlFor="syncInterval">{apis.i18n.getMessage('options_syncInterval')}</label>
+      </div>
+      <div className="control">
+        <div className="select">
+          <select
+            id="syncInterval"
+            value={syncInterval}
+            onChange={e => {
+              const value = Number(e.currentTarget.value);
+              setSyncInterval(value);
+              LocalStorage.store({ syncInterval: value });
+            }}
+          >
+            {[5, 15, 30, 60, 120, 300].map(value => (
+              <option key={value} value={value}>
+                {dayjs
+                  .duration({ minutes: value })
+                  .locale(apis.i18n.getMessage('dayjsLocale'))
+                  .humanize(false)}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const SyncSection: React.FC = () => {
   const initialItems = React.useContext(InitialItems);
-  const [currentCloudStorageId, setCurrentCloudStorageId] = React.useState(
-    initialItems.currentCloudStorageId,
-  );
+  const [syncCloudId, setSyncCloudId] = React.useState(initialItems.syncCloudId);
   // #if CHROMIUM
   /*
   // #else
@@ -229,11 +255,9 @@ export const SyncSection: React.FC = () => {
   // #endif
   return (
     <Section title={apis.i18n.getMessage('options_syncTitle')}>
-      <TurnOnSync
-        currentCloudStorageId={currentCloudStorageId}
-        setCurrentCloudStorageId={setCurrentCloudStorageId}
-      />
-      <SyncNow currentCloudStorageId={currentCloudStorageId} />
+      <TurnOnSync syncCloudId={syncCloudId} setSyncCloudId={setSyncCloudId} />
+      <SyncNow syncCloudId={syncCloudId} />
+      <SetSyncInterval />
     </Section>
   );
 };

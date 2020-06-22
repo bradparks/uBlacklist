@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import dayjs from 'dayjs';
 import { apis } from '../apis';
-import type { CloudStorage } from '../types';
+import type { Cloud } from '../types';
 import { BadResponse, request, requestJSON, requestText, validate } from '../utilities';
 
 const CLIENT_ID = '304167046827-45h8no7j0s38akv999nivvb7i17ckqeh.apps.googleusercontent.com';
@@ -9,8 +9,12 @@ const CLIENT_SECRET = '1QcFpNjHoAf3_XczYwhYicTl';
 const FILENAME = 'uBlacklist.txt';
 const MULTIPART_RELATED_BOUNDARY = '----------uBlacklistMultipartRelatedBoundaryJMPRhmg2VV4JBuua';
 
-export const googleDrive: CloudStorage = {
-  messageName: 'cloudStorages_googleDrive',
+export const googleDrive: Cloud = {
+  messageNames: {
+    sync: 'clouds_googleDriveSync',
+    syncDescription: 'clouds_googleDriveSyncDescription',
+    syncTurnedOn: 'clouds_googleDriveSyncTurnedOn',
+  },
 
   hostPermissions: [
     // #if CHROMIUM

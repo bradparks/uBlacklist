@@ -55,8 +55,8 @@ const manifest = {
   version: '0.1.0',
   content_scripts: [
     {
-      css: ['styles/engines/google.css', 'styles/content.css'],
-      js: ['scripts/engines/google.js', 'scripts/content.js'],
+      css: ['styles/search-engines/google.css', 'styles/content.css'],
+      js: ['scripts/search-engines/google.js', 'scripts/content.js'],
       run_at: 'document_start',
       matches: [
         'https://www.google.com/search?*',

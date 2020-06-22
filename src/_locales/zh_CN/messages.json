@@ -72,14 +72,6 @@
   "popup_unblockSiteButton": {
     "message": "移除"
   },
-  "popup_siteBlockedBySubscription": {
-    "message": "通过 $NAME$ 禁止。",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
-  },
   "options_generalTitle": {
     "message": "一般"
   },
@@ -110,10 +102,10 @@
   "options_otherSearchEnginesDescription": {
     "message": "当前还支持以下搜索引擎（需要手动开启，并同意读取和更改网页数据）"
   },
-  "options_enableOnSearchEngine": {
+  "options_registerSearchEngine": {
     "message": "启用"
   },
-  "options_enabledOnSearchEngine": {
+  "options_searchEngineRegistered": {
     "message": "已启用"
   },
   "options_hideBlockLinksLabel": {
@@ -190,5 +182,17 @@
   },
   "options_addSubscriptionDialog_addButton": {
     "message": "添加"
+  },
+  "clouds_googleDriveSync": {
+    "message": "使用 Google Drive 同步"
+  },
+  "clouds_googleDriveSyncTurnedOn": {
+    "message": "已开启使用 Google Drive 同步"
+  },
+  "clouds_dropboxSync": {
+    "message": "使用 Dropbox 同步"
+  },
+  "clouds_dropboxSyncTurnedOn": {
+    "message": "已开启使用 Dropbox 同步"
   }
 }

@@ -1,50 +1,55 @@
 import dayjs from 'dayjs';
 import { apis } from '../apis';
-import { CLOUD_STORAGES } from '../cloud-storages';
+import { supportedClouds } from '../supported-clouds';
 import * as LocalStorage from '../local-storage';
-import type { CloudStorageId } from '../types';
+import type { CloudId } from '../types';
 import { HTTPError, Mutex } from '../utilities';
 
 const mutex = new Mutex();
 
-export async function connect(id: CloudStorageId): Promise<void> {
+export async function connect(id: CloudId): Promise<boolean> {
   return mutex.lock(async () => {
-    const { currentCloudStorageId: oldId } = await LocalStorage.load(['currentCloudStorageId']);
+    const { syncCloudId: oldId } = await LocalStorage.load(['syncCloudId']);
     if (oldId != null) {
       throw new Error('Already connected');
     }
-    const cloudStorage = CLOUD_STORAGES[id];
-    const { authorizationCode } = await cloudStorage.authorize();
-    const token = await cloudStorage.getAccessToken(authorizationCode);
-    await LocalStorage.store({
-      currentCloudStorageId: id,
-      currentCloudStorageToken: {
-        accessToken: token.accessToken,
-        expiresAt: dayjs().add(token.expiresIn, 'second'),
-        refreshToken: token.refreshToken,
-      },
-    });
+    const cloud = supportedClouds[id];
+    try {
+      const { authorizationCode } = await cloud.authorize();
+      const token = await cloud.getAccessToken(authorizationCode);
+      await LocalStorage.store({
+        syncCloudId: id,
+        syncCloudToken: {
+          accessToken: token.accessToken,
+          expiresAt: dayjs().add(token.expiresIn, 'second'),
+          refreshToken: token.refreshToken,
+        },
+      });
+      return true;
+    } catch {
+      return false;
+    }
   });
 }
 
 export async function disconnect(): Promise<void> {
   return mutex.lock(async () => {
-    const { currentCloudStorageId: id, currentCloudStorageToken: token } = await LocalStorage.load([
-      'currentCloudStorageId',
-      'currentCloudStorageToken',
+    const { syncCloudId: id, syncCloudToken: token } = await LocalStorage.load([
+      'syncCloudId',
+      'syncCloudToken',
     ]);
     if (id == null) {
       throw new Error('Not connected');
     }
     if (token) {
-      const cloudStorage = CLOUD_STORAGES[id];
+      const cloud = supportedClouds[id];
       try {
-        cloudStorage.revokeToken(token.refreshToken);
+        cloud.revokeToken(token.refreshToken);
       } catch {
         // Ignore any exception
       }
     }
-    await LocalStorage.store({ currentCloudStorageId: null, currentCloudStorageToken: null });
+    await LocalStorage.store({ syncCloudId: null, syncCloudToken: null });
   });
 }
 
@@ -53,26 +58,26 @@ export async function syncFile(
   modifiedTime: dayjs.Dayjs,
 ): Promise<{ content: string; modifiedTime: dayjs.Dayjs } | null> {
   return await mutex.lock(async () => {
-    const { currentCloudStorageId: id, currentCloudStorageToken: token } = await LocalStorage.load([
-      'currentCloudStorageId',
-      'currentCloudStorageToken',
+    const { syncCloudId: id, syncCloudToken: token } = await LocalStorage.load([
+      'syncCloudId',
+      'syncCloudToken',
     ]);
     if (id == null) {
       throw new Error('Not connected');
     }
-    const cloudStorage = CLOUD_STORAGES[id];
+    const cloud = supportedClouds[id];
     if (token == null) {
       throw new Error(apis.i18n.getMessage('unauthorizedError'));
     }
     const refresh = async (): Promise<void> => {
       try {
-        const newToken = await cloudStorage.refreshAccessToken(token.refreshToken);
+        const newToken = await cloud.refreshAccessToken(token.refreshToken);
         token.accessToken = newToken.accessToken;
         token.expiresAt = dayjs().add(newToken.expiresIn, 'second');
-        await LocalStorage.store({ currentCloudStorageToken: token });
+        await LocalStorage.store({ syncCloudToken: token });
       } catch (e) {
         if (e instanceof HTTPError && e.status === 400) {
-          await LocalStorage.store({ currentCloudStorageToken: null });
+          await LocalStorage.store({ syncCloudToken: null });
           throw new Error(apis.i18n.getMessage('unauthorizedError'));
         } else {
           throw e;
@@ -94,11 +99,11 @@ export async function syncFile(
         }
       }
     };
-    const findResult = await refreshOnUnauthorized(() => cloudStorage.findFile(token.accessToken));
+    const findResult = await refreshOnUnauthorized(() => cloud.findFile(token.accessToken));
     if (findResult) {
       if (modifiedTime.isBefore(findResult.modifiedTime)) {
         const readResult = await refreshOnUnauthorized(() =>
-          cloudStorage.readFile(token.accessToken, findResult.id),
+          cloud.readFile(token.accessToken, findResult.id),
         );
         return {
           content: readResult.content,
@@ -108,14 +113,12 @@ export async function syncFile(
         return null;
       } else {
         await refreshOnUnauthorized(() =>
-          cloudStorage.writeFile(token.accessToken, findResult.id, content, modifiedTime),
+          cloud.writeFile(token.accessToken, findResult.id, content, modifiedTime),
         );
         return null;
       }
     } else {
-      await refreshOnUnauthorized(() =>
-        cloudStorage.createFile(token.accessToken, content, modifiedTime),
-      );
+      await refreshOnUnauthorized(() => cloud.createFile(token.accessToken, content, modifiedTime));
       return null;
     }
   });

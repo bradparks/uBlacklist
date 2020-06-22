@@ -1,9 +1,11 @@
-import { Engine } from './types';
+import type { SearchEngines } from './types';
 
-export const ENGINES: Engine[] = [
+export const supportedSearchEngines: SearchEngines = [
   {
     id: 'duckduckgo',
-    name: 'DuckDuckGo',
+    messageNames: {
+      name: 'searchEngines_duckduckgoName',
+    },
     matches: [
       '*://duckduckgo.com/',
       '*://duckduckgo.com//',
@@ -18,7 +20,9 @@ export const ENGINES: Engine[] = [
   },
   {
     id: 'startpage',
-    name: 'Startpage.com',
+    messageNames: {
+      name: 'searchEngines_startpageName',
+    },
     matches: [
       'https://startpage.com/do/*',
       'https://startpage.com/sp/*',

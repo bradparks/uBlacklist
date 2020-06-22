@@ -127,6 +127,8 @@ export namespace apis {
   }
 
   export namespace storage {
+    export type StorageChange = chrome.storage.StorageChange;
+
     export const local = {
       get(
         keys: string | string[] | Record<string, unknown> | null,
@@ -152,6 +154,14 @@ export namespace apis {
             }
           });
         });
+      },
+    };
+
+    export const onChanged = {
+      addListener(
+        listener: (changes: Record<string, StorageChange>, areaName: string) => void,
+      ): void {
+        chrome.storage.onChanged.addListener(listener);
       },
     };
   }

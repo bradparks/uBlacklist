@@ -72,14 +72,6 @@
   "popup_unblockSiteButton": {
     "message": "Разблокировать"
   },
-  "popup_siteBlockedBySubscription": {
-    "message": "Заблокирован подпиской $NAME$",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
-  },
   "options_generalTitle": {
     "message": "Общие"
   },
@@ -111,10 +103,10 @@
   "options_otherSearchEnginesDescription": {
     "message": "Вы можете использовать расширение с другими поисковыми системами."
   },
-  "options_enableOnSearchEngine": {
+  "options_registerSearchEngine": {
     "message": "Включить"
   },
-  "options_enabledOnSearchEngine": {
+  "options_searchEngineRegistered": {
     "message": "Включено"
   },
   "options_hideBlockLinksLabel": {
@@ -194,5 +186,17 @@
   },
   "options_addSubscriptionDialog_addButton": {
     "message": "Добавить"
+  },
+  "clouds_googleDriveSync": {
+    "message": "Синхронизировать с Google Диском"
+  },
+  "clouds_googleDriveSyncTurnedOn": {
+    "message": "Синхронизирован с Google Диском"
+  },
+  "clouds_dropboxSync": {
+    "message": "Синхронизировать с Dropbox"
+  },
+  "clouds_dropboxSyncTurnedOn": {
+    "message": "Синхронизирован с Dropbox"
   }
 }

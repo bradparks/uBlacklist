@@ -1,21 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { apis } from '../apis';
-import { ENGINES } from '../engines';
 import * as LocalStorage from '../local-storage';
 import { sendMessage } from '../messages';
-import type { Engine } from '../types';
+import { supportedSearchEngines } from '../supported-search-engines';
+import type { SearchEngine } from '../types';
 import { lines, unlines } from '../utilities';
 import { Dialog } from './dialog';
 import { InitialItems } from './initial-items';
 import { Section } from './section';
-import { Switch } from './switch';
-
-const enum BlacklistStatus {
-  Clean,
-  Dirty,
-  DirtyImport,
-}
 
 type ImportBlacklistDialogProps = {
   open: boolean;
@@ -50,7 +43,7 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
             onChange={e => {
               setDomains(e.currentTarget.value);
             }}
-          ></textarea>
+          />
         </div>
       </div>
       <div className="field is-grouped is-grouped-right">
@@ -86,17 +79,25 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
   );
 };
 
-const Blacklist: React.FC = () => {
+const SetBlacklist: React.FC = () => {
   const { blacklist: initialBlacklist } = React.useContext(InitialItems);
+
+  const [storedBlacklist, setStoredBlacklist] = React.useState(initialBlacklist);
+  const [locallyStoredBlacklist, setLocallyStoredBlacklist] = React.useState(initialBlacklist);
   const [blacklist, setBlacklist] = React.useState(initialBlacklist);
-  const [blacklistStatus, setBlacklistStatus] = React.useState(BlacklistStatus.Clean);
+  const [blacklistDirty, setBlacklistDirty] = React.useState(false);
   const [importBlacklistDialogOpen, setImportBlacklistDialogOpen] = React.useState(false);
+
   const blacklistTextArea = React.useRef<HTMLTextAreaElement>(null);
-  React.useLayoutEffect(() => {
-    if (blacklistStatus === BlacklistStatus.DirtyImport) {
-      blacklistTextArea.current!.scrollTop = blacklistTextArea.current!.scrollHeight;
-    }
-  }, [blacklist, blacklistStatus]);
+
+  React.useEffect(() => {
+    LocalStorage.addListener(newItems => {
+      if (newItems.blacklist !== undefined) {
+        setStoredBlacklist(newItems.blacklist);
+      }
+    });
+  }, []);
+
   return (
     <>
       <div className="field">
@@ -121,10 +122,27 @@ const Blacklist: React.FC = () => {
             value={blacklist}
             onChange={e => {
               setBlacklist(e.target.value);
-              setBlacklistStatus(BlacklistStatus.Dirty);
+              setBlacklistDirty(true);
             }}
           />
         </div>
+        {storedBlacklist !== locallyStoredBlacklist && (
+          <p className="help">
+            {apis.i18n.getMessage('options_blacklistUpdated')}
+            &nbsp;
+            <span
+              className="reload-blacklist-button"
+              tabIndex={0}
+              onClick={() => {
+                setLocallyStoredBlacklist(storedBlacklist);
+                setBlacklist(storedBlacklist);
+                setBlacklistDirty(false);
+              }}
+            >
+              {apis.i18n.getMessage('options_reloadBlacklistButton')}
+            </span>
+          </p>
+        )}
       </div>
       <div className="field is-grouped is-grouped-right">
         <div className="control">
@@ -144,7 +162,7 @@ const Blacklist: React.FC = () => {
             importBlacklist={newBlacklist => {
               if (newBlacklist) {
                 setBlacklist(`${blacklist}${blacklist ? '\n' : ''}${newBlacklist}`);
-                setBlacklistStatus(BlacklistStatus.DirtyImport);
+                setBlacklistDirty(true);
               }
             }}
           />,
@@ -153,10 +171,12 @@ const Blacklist: React.FC = () => {
         <div className="control">
           <button
             className="button is-primary"
-            disabled={blacklistStatus === BlacklistStatus.Clean}
+            disabled={!blacklistDirty}
             onClick={() => {
+              setStoredBlacklist(blacklist);
+              setLocallyStoredBlacklist(blacklist);
+              setBlacklistDirty(false);
               sendMessage('set-blacklist', blacklist);
-              setBlacklistStatus(BlacklistStatus.Clean);
             }}
           >
             {apis.i18n.getMessage('options_saveBlacklistButton')}
@@ -167,48 +187,42 @@ const Blacklist: React.FC = () => {
   );
 };
 
-type ItemSwitchProps = {
-  itemKey: 'skipBlockDialog' | 'hideBlockLinks' | 'hideControl';
-  label: string;
+type RegisterSearchEngineProps = {
+  searchEngine: SearchEngine;
 };
 
-type SearchEngineProps = {
-  searchEngine: Engine;
-};
-
-const SearchEngine: React.FC<SearchEngineProps> = props => {
-  const [enabled, setEnabled] = React.useState(false);
+const RegisterSearchEngine: React.FC<RegisterSearchEngineProps> = props => {
+  const [registered, setRegistered] = React.useState(false);
   React.useLayoutEffect(() => {
     (async () => {
-      const enabled = await apis.permissions.contains({ origins: props.searchEngine.matches });
-      setEnabled(enabled);
+      const registered = await apis.permissions.contains({ origins: props.searchEngine.matches });
+      setRegistered(registered);
     })();
   }, [props.searchEngine]);
   return (
-    <div className="columns is-vcentered">
-      <div className="column">
-        <label>{props.searchEngine.name}</label>
+    <div className="field is-grouped is-vcentered">
+      <div className="control is-expanded">
+        <label>{apis.i18n.getMessage(props.searchEngine.messageNames.name)}</label>
       </div>
-      <div className="column is-narrow">
-        {!enabled && (
+      <div className="control">
+        {registered ? (
+          <button className="button has-text-primary" disabled>
+            {apis.i18n.getMessage('options_searchEngineRegistered')}
+          </button>
+        ) : (
           <button
             className="button is-primary"
             onClick={async () => {
-              const enabled = await apis.permissions.request({
+              const registered = await apis.permissions.request({
                 origins: props.searchEngine.matches,
               });
-              setEnabled(enabled);
-              if (enabled) {
-                sendMessage('enable-on-engine', props.searchEngine);
+              setRegistered(registered);
+              if (registered) {
+                sendMessage('register-search-engine', props.searchEngine);
               }
             }}
           >
-            {apis.i18n.getMessage('options_enableOnSearchEngine')}
-          </button>
-        )}
-        {enabled && (
-          <button className="button has-text-primary" disabled>
-            {apis.i18n.getMessage('options_enabledOnSearchEngine')}
+            {apis.i18n.getMessage('options_registerSearchEngine')}
           </button>
         )}
       </div>
@@ -216,7 +230,7 @@ const SearchEngine: React.FC<SearchEngineProps> = props => {
   );
 };
 
-const SearchEngines: React.FC = () => {
+const RegisterSearchEngines: React.FC = () => {
   return (
     <>
       <p>{apis.i18n.getMessage('options_otherSearchEngines')}</p>
@@ -224,9 +238,9 @@ const SearchEngines: React.FC = () => {
         {apis.i18n.getMessage('options_otherSearchEnginesDescription')}
       </p>
       <ul>
-        {ENGINES.map(engine => (
-          <li className="search-engine" key={engine.id}>
-            <SearchEngine searchEngine={engine} />
+        {supportedSearchEngines.map(searchEngine => (
+          <li className="register-search-engine" key={searchEngine.id}>
+            <RegisterSearchEngine searchEngine={searchEngine} />
           </li>
         ))}
       </ul>
@@ -234,25 +248,43 @@ const SearchEngines: React.FC = () => {
   );
 };
 
+type ItemSwitchProps = {
+  itemKey: 'skipBlockDialog' | 'hideBlockLinks' | 'hideControl';
+  label: string;
+};
+
 const ItemSwitch: React.FC<ItemSwitchProps> = props => {
   const { [props.itemKey]: initialItem } = React.useContext(InitialItems);
   const [item, setItem] = React.useState(initialItem);
   return (
-    <Switch
-      label={props.label}
-      value={item}
-      onChange={e => {
-        setItem(e.target.checked);
-        LocalStorage.store({ [props.itemKey]: e.target.checked });
-      }}
-    />
+    <div className="field is-grouped is-vcentered">
+      <div className="control is-expanded">
+        <label htmlFor={props.itemKey}>{props.label}</label>
+      </div>
+      <div className="control">
+        <div className="switch-wrapper">
+          <input
+            id={props.itemKey}
+            className="switch is-rounded"
+            type="checkbox"
+            checked={item}
+            onChange={e => {
+              const value = e.currentTarget.checked;
+              setItem(value);
+              LocalStorage.store({ [props.itemKey]: value });
+            }}
+          />
+          <label className="label" htmlFor={props.itemKey} />
+        </div>
+      </div>
+    </div>
   );
 };
 
 export const GeneralSection: React.FC = () => (
   <Section title={apis.i18n.getMessage('options_generalTitle')}>
-    <Blacklist />
-    <SearchEngines />
+    <SetBlacklist />
+    <RegisterSearchEngines />
     <ItemSwitch
       itemKey="skipBlockDialog"
       label={apis.i18n.getMessage('options_skipBlockDialogLabel')}

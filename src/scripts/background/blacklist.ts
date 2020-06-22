@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import * as LocalStorage from '../local-storage';
 import { postMessage } from '../messages';
-import type { Interval } from '../types';
 import { Mutex, errorResult, successResult } from '../utilities';
-import { syncFile } from './cloud-storages';
+import { syncFile } from './clouds';
 
 const mutex = new Mutex();
 
@@ -13,15 +12,15 @@ export async function set(blacklist: string): Promise<void> {
   });
 }
 
-export async function sync(): Promise<Interval | null> {
+export async function sync(): Promise<number | null> {
   return await mutex.lock(async () => {
-    const { blacklist, timestamp, currentCloudStorageId, syncInterval } = await LocalStorage.load([
+    const { blacklist, timestamp, syncCloudId, syncInterval } = await LocalStorage.load([
       'blacklist',
       'timestamp',
-      'currentCloudStorageId',
+      'syncCloudId',
       'syncInterval',
     ]);
-    if (currentCloudStorageId == null) {
+    if (syncCloudId == null) {
       return null;
     }
     postMessage('blacklist-syncing');

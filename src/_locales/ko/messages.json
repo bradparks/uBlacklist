@@ -72,14 +72,6 @@
   "popup_unblockSiteButton": {
     "message": "차단 해제"
   },
-  "popup_siteBlockedBySubscription": {
-    "message": "$NAME$에 의해 차단되었습니다.",
-    "placeholders": {
-      "name": {
-        "content": "$1"
-      }
-    }
-  },
   "options_generalTitle": {
     "message": "일반"
   },
@@ -111,10 +103,10 @@
   "options_otherSearchEnginesDescription": {
     "message": "아래 검색 엔진에서도 차단 기능을 사용할 수 있습니다."
   },
-  "options_enableOnSearchEngine": {
+  "options_registerSearchEngine": {
     "message": "활성화"
   },
-  "options_enabledOnSearchEngine": {
+  "options_searchEngineRegistered": {
     "message": "활성화 됨"
   },
   "options_hideBlockLinksLabel": {
@@ -194,5 +186,17 @@
   },
   "options_addSubscriptionDialog_addButton": {
     "message": "추가"
+  },
+  "clouds_googleDriveSync": {
+    "message": "Google Drive와 동기화."
+  },
+  "clouds_googleDriveSyncTurnedOn": {
+    "message": "Google Drive와 동기화 되었습니다."
+  },
+  "clouds_dropboxSync": {
+    "message": "Dropbox와 동기화."
+  },
+  "clouds_dropboxSyncTurnedOn": {
+    "message": "Dropbox와 동기화 되었습니다."
   }
 }

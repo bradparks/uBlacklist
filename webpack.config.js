@@ -4,10 +4,9 @@ const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const LicenseCheckerWebpackPlugin = require('license-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const ENGINE_IDS = ['duckduckgo', 'startpage'];
-
 const browser = process.env.BROWSER || 'chrome';
 const env = process.env.NODE_ENV || 'development';
+
 const ifdefLoader = {
   loader: 'ifdef-loader',
   options: {
@@ -17,24 +16,32 @@ const ifdefLoader = {
   },
 };
 
+const supportedSearchEngineIds = ['duckduckgo', 'startpage'];
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   devtool: env === 'development' ? 'inline-source-map' : false,
   entry: {
     'manifest.json': './manifest.json.js',
     'scripts/background': './scripts/background.ts',
-    'scripts/engines/google': './scripts/engines/google.ts',
+    'scripts/search-engines/google': './scripts/search-engines/google.ts',
     'scripts/content': './scripts/content.ts',
     'scripts/options': './scripts/options.ts',
     'scripts/popup': './scripts/popup.ts',
     'styles/content': './styles/content.scss',
-    'styles/engines/google': './styles/engines/google.scss',
+    'styles/search-engines/google': './styles/search-engines/google.scss',
     'styles/options': './styles/options.scss',
     'styles/popup': './styles/popup.scss',
     ...Object.fromEntries(
-      ENGINE_IDS.flatMap(engineId => [
-        [`scripts/engines/${engineId}`, `./scripts/engines/${engineId}.ts`],
-        [`styles/engines/${engineId}`, `./styles/engines/${engineId}.scss`],
+      supportedSearchEngineIds.flatMap(searchEngineId => [
+        [
+          `scripts/search-engines/${searchEngineId}`,
+          `./scripts/search-engines/${searchEngineId}.ts`,
+        ],
+        [
+          `styles/search-engines/${searchEngineId}`,
+          `./styles/search-engines/${searchEngineId}.scss`,
+        ],
       ]),
     ),
   },
