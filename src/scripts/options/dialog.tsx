@@ -29,7 +29,7 @@ export const Dialog: React.FC<DialogProps> = props => {
           props.setOpen(false);
         }}
       ></div>
-      <div className="modal-content box">{props.children}</div>
+      <div className="ub-dialog modal-content box">{props.children}</div>
     </div>
   );
 };

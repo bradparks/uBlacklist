@@ -34,20 +34,9 @@ export async function connect(id: CloudId): Promise<boolean> {
 
 export async function disconnect(): Promise<void> {
   return mutex.lock(async () => {
-    const { syncCloudId: id, syncCloudToken: token } = await LocalStorage.load([
-      'syncCloudId',
-      'syncCloudToken',
-    ]);
+    const { syncCloudId: id } = await LocalStorage.load(['syncCloudId']);
     if (id == null) {
       throw new Error('Not connected');
-    }
-    if (token) {
-      const cloud = supportedClouds[id];
-      try {
-        cloud.revokeToken(token.refreshToken);
-      } catch {
-        // Ignore any exception
-      }
     }
     await LocalStorage.store({ syncCloudId: null, syncCloudToken: null });
   });
@@ -99,21 +88,21 @@ export async function syncFile(
         }
       }
     };
-    const findResult = await refreshOnUnauthorized(() => cloud.findFile(token.accessToken));
-    if (findResult) {
-      if (modifiedTime.isBefore(findResult.modifiedTime)) {
-        const readResult = await refreshOnUnauthorized(() =>
-          cloud.readFile(token.accessToken, findResult.id),
+    const cloudFile = await refreshOnUnauthorized(() => cloud.findFile(token.accessToken));
+    if (cloudFile) {
+      if (modifiedTime.isBefore(cloudFile.modifiedTime)) {
+        const { content: cloudContent } = await refreshOnUnauthorized(() =>
+          cloud.readFile(token.accessToken, cloudFile.id),
         );
         return {
-          content: readResult.content,
-          modifiedTime: findResult.modifiedTime,
+          content: cloudContent,
+          modifiedTime: cloudFile.modifiedTime,
         };
-      } else if (modifiedTime.isSame(findResult.modifiedTime)) {
+      } else if (modifiedTime.isSame(cloudFile.modifiedTime)) {
         return null;
       } else {
         await refreshOnUnauthorized(() =>
-          cloud.writeFile(token.accessToken, findResult.id, content, modifiedTime),
+          cloud.writeFile(token.accessToken, cloudFile.id, content, modifiedTime),
         );
         return null;
       }

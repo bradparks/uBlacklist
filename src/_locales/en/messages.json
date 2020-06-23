@@ -310,7 +310,7 @@
     "description": "The text indicating syncing with Dropbox."
   },
   "clouds_dropboxSyncDescription": {
-    "message": "A file named \"uBlacklist.txt\" will be created within \"/Apps/uBlacklist/\".",
+    "message": "A file will be created within \"/Apps/uBlacklist/\".",
     "description": "The text to describe the behavior of sync with Dropbox."
   },
   "clouds_dropboxSyncTurnedOn": {

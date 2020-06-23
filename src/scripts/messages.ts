@@ -69,11 +69,17 @@ function invokeListener(
   }
 }
 
-export function addMessageListeners(listeners: MessageListeners): void {
-  apis.runtime.onMessage.addListener((message, sender, sendResponse) => {
+export function addMessageListeners(listeners: MessageListeners): () => void {
+  const listener = (
+    message: unknown,
+    sender: apis.runtime.MessageSender,
+    sendResponse: (response: unknown) => void | boolean,
+  ) => {
     const { type, args } = message as { type: MessageTypes; args: unknown[] };
     if (listeners[type]) {
       return invokeListener(listeners[type] as (...args: unknown[]) => unknown, args, sendResponse);
     }
-  });
+  };
+  apis.runtime.onMessage.addListener(listener);
+  return () => apis.runtime.onMessage.removeListener(listener);
 }

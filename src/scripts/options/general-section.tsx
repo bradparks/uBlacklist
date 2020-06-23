@@ -23,17 +23,18 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
   }, [props.open]);
   return (
     <Dialog open={props.open} setOpen={props.setOpen}>
-      <div className="field">
+      <div className="ub-row field">
         <h1 className="title">{apis.i18n.getMessage('options_importBlacklistDialog_title')}</h1>
       </div>
-      <div className="field">
-        <p className="help has-text-grey">
+      <div className="ub-row field">
+        <p className="has-text-grey">
           {apis.i18n.getMessage('options_importBlacklistDialog_helper')}
-          <br />
+        </p>
+        <p className="has-text-grey">
           {apis.i18n.getMessage('options_blacklistExample', 'example.com')}
         </p>
       </div>
-      <div className="field">
+      <div className="ub-row field">
         <div className="control">
           <textarea
             className="textarea has-fixed-size"
@@ -46,10 +47,10 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
           />
         </div>
       </div>
-      <div className="field is-grouped is-grouped-right">
+      <div className="ub-row field is-grouped is-grouped-right">
         <div className="control">
           <button
-            className="button has-text-primary"
+            className="ub-button button has-text-primary"
             onClick={() => {
               props.setOpen(false);
             }}
@@ -59,7 +60,7 @@ const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
         </div>
         <div className="control">
           <button
-            className="button is-primary"
+            className="ub-button button is-primary"
             onClick={() => {
               const rules: string[] = [];
               for (const domain of lines(domains)) {
@@ -83,7 +84,9 @@ const SetBlacklist: React.FC = () => {
   const { blacklist: initialBlacklist } = React.useContext(InitialItems);
 
   const [storedBlacklist, setStoredBlacklist] = React.useState(initialBlacklist);
-  const [locallyStoredBlacklist, setLocallyStoredBlacklist] = React.useState(initialBlacklist);
+  const [explicitlyStoredBlacklist, setExplicitlyStoredBlacklist] = React.useState(
+    initialBlacklist,
+  );
   const [blacklist, setBlacklist] = React.useState(initialBlacklist);
   const [blacklistDirty, setBlacklistDirty] = React.useState(false);
   const [importBlacklistDialogOpen, setImportBlacklistDialogOpen] = React.useState(false);
@@ -91,28 +94,31 @@ const SetBlacklist: React.FC = () => {
   const blacklistTextArea = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
-    LocalStorage.addListener(newItems => {
-      if (newItems.blacklist !== undefined) {
-        setStoredBlacklist(newItems.blacklist);
-      }
+    return LocalStorage.addChangeListeners({
+      blacklist: newBlacklist => {
+        if (newBlacklist !== undefined) {
+          setStoredBlacklist(newBlacklist);
+        }
+      },
     });
   }, []);
 
   return (
     <>
-      <div className="field">
+      <div className="ub-row field">
         <p>{apis.i18n.getMessage('options_blacklistLabel')}</p>
-        <p className="help has-text-grey">
-          <span
-            dangerouslySetInnerHTML={{ __html: apis.i18n.getMessage('options_blacklistHelper') }}
-          />
-          <br />
+        <p
+          className="has-text-grey"
+          dangerouslySetInnerHTML={{ __html: apis.i18n.getMessage('options_blacklistHelper') }}
+        />
+        <p className="has-text-grey">
           {apis.i18n.getMessage('options_blacklistExample', '*://*.example.com/*')}
-          <br />
+        </p>
+        <p className="has-text-grey">
           {apis.i18n.getMessage('options_blacklistExample', '/example\\.(net|org)/')}
         </p>
       </div>
-      <div className="field">
+      <div className="ub-row field">
         <div className="control">
           <textarea
             className="textarea has-fixed-size"
@@ -126,15 +132,15 @@ const SetBlacklist: React.FC = () => {
             }}
           />
         </div>
-        {storedBlacklist !== locallyStoredBlacklist && (
+        {storedBlacklist !== explicitlyStoredBlacklist && (
           <p className="help">
             {apis.i18n.getMessage('options_blacklistUpdated')}
             &nbsp;
             <span
-              className="reload-blacklist-button"
+              className="ub-link-button"
               tabIndex={0}
               onClick={() => {
-                setLocallyStoredBlacklist(storedBlacklist);
+                setExplicitlyStoredBlacklist(storedBlacklist);
                 setBlacklist(storedBlacklist);
                 setBlacklistDirty(false);
               }}
@@ -144,10 +150,10 @@ const SetBlacklist: React.FC = () => {
           </p>
         )}
       </div>
-      <div className="field is-grouped is-grouped-right">
+      <div className="ub-row field is-grouped is-grouped-right">
         <div className="control">
           <button
-            className="button has-text-primary"
+            className="ub-button button has-text-primary"
             onClick={() => {
               setImportBlacklistDialogOpen(true);
             }}
@@ -170,11 +176,11 @@ const SetBlacklist: React.FC = () => {
         )}
         <div className="control">
           <button
-            className="button is-primary"
+            className="ub-button button is-primary"
             disabled={!blacklistDirty}
             onClick={() => {
               setStoredBlacklist(blacklist);
-              setLocallyStoredBlacklist(blacklist);
+              setExplicitlyStoredBlacklist(blacklist);
               setBlacklistDirty(false);
               sendMessage('set-blacklist', blacklist);
             }}
@@ -200,18 +206,18 @@ const RegisterSearchEngine: React.FC<RegisterSearchEngineProps> = props => {
     })();
   }, [props.searchEngine]);
   return (
-    <div className="field is-grouped is-vcentered">
+    <div className="ub-row field is-grouped">
       <div className="control is-expanded">
         <label>{apis.i18n.getMessage(props.searchEngine.messageNames.name)}</label>
       </div>
       <div className="control">
         {registered ? (
-          <button className="button has-text-primary" disabled>
+          <button className="ub-button button has-text-primary" disabled>
             {apis.i18n.getMessage('options_searchEngineRegistered')}
           </button>
         ) : (
           <button
-            className="button is-primary"
+            className="ub-button button is-primary"
             onClick={async () => {
               const registered = await apis.permissions.request({
                 origins: props.searchEngine.matches,
@@ -237,9 +243,9 @@ const RegisterSearchEngines: React.FC = () => {
       <p className="has-text-grey">
         {apis.i18n.getMessage('options_otherSearchEnginesDescription')}
       </p>
-      <ul>
+      <ul className="ub-list">
         {supportedSearchEngines.map(searchEngine => (
-          <li className="register-search-engine" key={searchEngine.id}>
+          <li className="ub-list-item" key={searchEngine.id}>
             <RegisterSearchEngine searchEngine={searchEngine} />
           </li>
         ))}
@@ -257,12 +263,12 @@ const ItemSwitch: React.FC<ItemSwitchProps> = props => {
   const { [props.itemKey]: initialItem } = React.useContext(InitialItems);
   const [item, setItem] = React.useState(initialItem);
   return (
-    <div className="field is-grouped is-vcentered">
+    <div className="ub-row field is-grouped">
       <div className="control is-expanded">
         <label htmlFor={props.itemKey}>{props.label}</label>
       </div>
       <div className="control">
-        <div className="switch-wrapper">
+        <div className="ub-switch">
           <input
             id={props.itemKey}
             className="switch is-rounded"

@@ -23,7 +23,6 @@ export interface Cloud {
     authorizationCode: string,
   ): Promise<{ accessToken: string; expiresIn: number; refreshToken: string }>;
   refreshAccessToken(refreshToken: string): Promise<{ accessToken: string; expiresIn: number }>;
-  revokeToken(token: string): Promise<void>;
   findFile(accessToken: string): Promise<{ id: string; modifiedTime: dayjs.Dayjs } | null>;
   createFile(accessToken: string, content: string, modifiedTime: dayjs.Dayjs): Promise<void>;
   readFile(accessToken: string, id: string): Promise<{ content: string }>;

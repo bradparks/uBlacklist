@@ -6,7 +6,7 @@ import { SyncSection } from './sync-section';
 
 const Main: React.FC = () => (
   <InitialItemsProvider>
-    <div className="main">
+    <div className="ub-main">
       <GeneralSection />
       <SyncSection />
     </div>

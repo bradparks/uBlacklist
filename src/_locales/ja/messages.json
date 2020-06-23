@@ -234,7 +234,7 @@
     "message": "Dropbox と同期する"
   },
   "clouds_dropboxSyncDescription": {
-    "message": "フォルダ \"/アプリ/uBlacklist/\" にファイル \"uBlacklist.txt\" が作成されます。"
+    "message": "フォルダ \"/アプリ/uBlacklist/\" にファイルが作成されます。"
   },
   "clouds_dropboxSyncTurnedOn": {
     "message": "Dropbox と同期しています"

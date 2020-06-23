@@ -117,6 +117,16 @@ export namespace apis {
       ): void {
         chrome.runtime.onMessage.addListener(callback);
       },
+
+      removeListener(
+        callback: (
+          message: unknown,
+          sender: MessageSender,
+          sendResponse: (response: unknown) => void | boolean,
+        ) => void,
+      ): void {
+        chrome.runtime.onMessage.removeListener(callback);
+      },
     };
 
     export const onStartup = {
@@ -162,6 +172,12 @@ export namespace apis {
         listener: (changes: Record<string, StorageChange>, areaName: string) => void,
       ): void {
         chrome.storage.onChanged.addListener(listener);
+      },
+
+      removeListener(
+        listener: (changes: Record<string, StorageChange>, areaName: string) => void,
+      ): void {
+        chrome.storage.onChanged.removeListener(listener);
       },
     };
   }

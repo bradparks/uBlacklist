@@ -26,11 +26,11 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
   }, [props.open]);
   return (
     <Dialog open={props.open} setOpen={props.setOpen}>
-      <div className="field">
+      <div className="ub-row field">
         <h1 className="title">{apis.i18n.getMessage('options_turnOnSyncDialog_title')}</h1>
       </div>
       {React.Children.map(Object.keys(supportedClouds) as CloudId[], cloudId => (
-        <div className="field is-grouped is-vcentered">
+        <div className="ub-row field is-grouped">
           <div className="control">
             <input
               id={cloudId}
@@ -52,10 +52,10 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
           </label>
         </div>
       ))}
-      <div className="field is-grouped is-grouped-right">
+      <div className="ub-row field is-grouped is-grouped-right">
         <div className="control">
           <button
-            className="button has-text-primary"
+            className="ub-button button has-text-primary"
             onClick={() => {
               props.setOpen(false);
             }}
@@ -65,7 +65,7 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
         </div>
         <div className="control">
           <button
-            className="button is-primary"
+            className="ub-button button is-primary"
             onClick={() => {
               (async () => {
                 const granted = await apis.permissions.request({
@@ -100,7 +100,7 @@ const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
   const [turnOnSyncDialogOpen, setTurnOnSyncDialogOpen] = React.useState(false);
   if (props.syncCloudId != null) {
     return (
-      <div className="field is-grouped is-vcentered">
+      <div className="ub-row field is-grouped">
         <div className="control is-expanded">
           <p>
             {apis.i18n.getMessage(supportedClouds[props.syncCloudId].messageNames.syncTurnedOn)}
@@ -108,7 +108,7 @@ const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
         </div>
         <div className="control">
           <button
-            className="button has-text-primary"
+            className="ub-button button has-text-primary"
             onClick={() => {
               (async () => {
                 await sendMessage('disconnect-from-cloud');
@@ -123,14 +123,14 @@ const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
     );
   } else {
     return (
-      <div className="field is-grouped is-vcentered">
+      <div className="ub-row field is-grouped">
         <div className="control is-expanded">
           <p>{apis.i18n.getMessage('options_syncFeature')}</p>
           <p className="has-text-grey">{apis.i18n.getMessage('options_syncFeatureDescription')}</p>
         </div>
         <div className="control">
           <button
-            className="button is-primary"
+            className="ub-button button is-primary"
             onClick={() => {
               setTurnOnSyncDialogOpen(true);
             }}
@@ -156,8 +156,8 @@ interface SyncNowProps {
 }
 
 const SyncNow: React.FC<SyncNowProps> = props => {
-  const initialItems = React.useContext(InitialItems);
-  const [syncResult, setSyncResult] = React.useState(initialItems.syncResult);
+  const { syncResult: initialSyncResult } = React.useContext(InitialItems);
+  const [syncResult, setSyncResult] = React.useState(initialSyncResult);
   const [syncing, setSyncing] = React.useState(false);
   React.useEffect(() => {
     addMessageListeners({
@@ -171,7 +171,7 @@ const SyncNow: React.FC<SyncNowProps> = props => {
     });
   }, []);
   return (
-    <div className="field is-grouped is-vcentered">
+    <div className="ub-row field is-grouped">
       <div className="control is-expanded">
         <p>{apis.i18n.getMessage('options_syncResult')}</p>
         <p className="has-text-grey">
@@ -186,7 +186,7 @@ const SyncNow: React.FC<SyncNowProps> = props => {
       </div>
       <div className="control">
         <button
-          className="button has-text-primary"
+          className="ub-button button has-text-primary"
           disabled={props.syncCloudId == null || syncing}
           onClick={() => {
             sendMessage('sync-blacklist');
@@ -200,10 +200,10 @@ const SyncNow: React.FC<SyncNowProps> = props => {
 };
 
 export const SetSyncInterval: React.FC = () => {
-  const initialItems = React.useContext(InitialItems);
-  const [syncInterval, setSyncInterval] = React.useState(initialItems.syncInterval);
+  const { syncInterval: initialSyncInterval } = React.useContext(InitialItems);
+  const [syncInterval, setSyncInterval] = React.useState(initialSyncInterval);
   return (
-    <div className="field is-grouped is-vcentered">
+    <div className="ub-row field is-grouped">
       <div className="control is-expanded">
         <label htmlFor="syncInterval">{apis.i18n.getMessage('options_syncInterval')}</label>
       </div>
@@ -234,8 +234,8 @@ export const SetSyncInterval: React.FC = () => {
 };
 
 export const SyncSection: React.FC = () => {
-  const initialItems = React.useContext(InitialItems);
-  const [syncCloudId, setSyncCloudId] = React.useState(initialItems.syncCloudId);
+  const { syncCloudId: initialSyncCloudId } = React.useContext(InitialItems);
+  const [syncCloudId, setSyncCloudId] = React.useState(initialSyncCloudId);
   // #if CHROMIUM
   /*
   // #else

@@ -25,12 +25,12 @@ export async function sync(): Promise<number | null> {
     }
     postMessage('blacklist-syncing');
     try {
-      const syncResult = await syncFile(blacklist, dayjs(timestamp));
+      const cloudFile = await syncFile(blacklist, dayjs(timestamp));
       const result = successResult();
-      if (syncResult) {
+      if (cloudFile) {
         await LocalStorage.store({
-          blacklist: syncResult.content,
-          timestamp: syncResult.modifiedTime.toISOString(),
+          blacklist: cloudFile.content,
+          timestamp: cloudFile.modifiedTime.toISOString(),
           syncResult: result,
         });
       } else {

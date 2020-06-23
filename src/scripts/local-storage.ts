@@ -48,18 +48,19 @@ export async function store<T extends Partial<Items>>(items: T): Promise<void> {
   await apis.storage.local.set(items);
 }
 
-export function addListener(listener: (newItems: Partial<Items>) => void): void {
-  apis.storage.onChanged.addListener((changes, areaName) => {
+export function addChangeListeners(
+  listeners: { [Key in keyof Items]?: (newItem: Items[Key] | undefined) => void },
+): () => void {
+  const listener = (changes: Record<string, apis.storage.StorageChange>, areaName: string) => {
     if (areaName !== 'local') {
       return;
     }
-    const newValues: Record<string, unknown> = {};
-    for (const key of Object.keys(changes)) {
-      const newValue = changes[key].newValue;
-      if (newValue !== undefined) {
-        newValues[key] = newValue;
+    for (const key of Object.keys(changes) as (keyof Items)[]) {
+      if (listeners[key]) {
+        listeners[key]!(changes[key].newValue);
       }
     }
-    listener(newValues as Partial<Items>);
-  });
+  };
+  apis.storage.onChanged.addListener(listener);
+  return () => apis.storage.onChanged.removeListener(listener);
 }

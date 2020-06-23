@@ -103,15 +103,6 @@ export const googleDrive: Cloud = {
     return { accessToken: response.access_token, expiresIn: response.expires_in };
   },
 
-  // https://github.com/googleapis/google-cloud-common/issues/260#issuecomment-413231697
-  async revokeToken(token: string): Promise<void> {
-    const requesetURL = new URL('https://oauth2.googleapis.com/revoke');
-    requesetURL.search = new URLSearchParams({ token }).toString();
-    await request(requesetURL.toString(), {
-      method: 'POST',
-    });
-  },
-
   // https://developers.google.com/drive/api/v3/reference/files/list
   // https://developers.google.com/drive/api/v3/appdata
   async findFile(accessToken: string): Promise<{ id: string; modifiedTime: dayjs.Dayjs } | null> {
