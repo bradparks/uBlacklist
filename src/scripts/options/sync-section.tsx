@@ -1,23 +1,28 @@
+import dayjs from 'dayjs';
+import dayjsDuration from 'dayjs/plugin/duration';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { apis } from '../apis';
+import '../dayjs-locales';
 import * as LocalStorage from '../local-storage';
-import { supportedClouds } from '../supported-clouds';
 import { addMessageListeners, sendMessage } from '../messages';
+import { supportedClouds } from '../supported-clouds';
 import type { CloudId } from '../types';
-import { dayjs } from './dayjs';
+import { isErrorResult } from '../utilities';
 import { Dialog } from './dialog';
+import { FromNow } from './from-now';
 import { InitialItems } from './initial-items';
 import { Section } from './section';
-import { ShowResult } from './show-result';
 
-interface TurnOnSyncDialogProps {
+dayjs.extend(dayjsDuration);
+
+type TurnOnSyncDialogProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   setSyncCloudId: (syncCloudId: CloudId) => void;
-}
+};
 
-const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
+const TurnOnSyncDialog: React.FC<Readonly<TurnOnSyncDialogProps>> = props => {
   const [syncCloudId, setSyncCloudId] = React.useState<CloudId>('googleDrive');
   React.useLayoutEffect(() => {
     if (props.open) {
@@ -91,12 +96,12 @@ const TurnOnSyncDialog: React.FC<TurnOnSyncDialogProps> = props => {
   );
 };
 
-interface TurnOnSyncProps {
+type TurnOnSyncProps = {
   syncCloudId: CloudId | null;
   setSyncCloudId: (syncCloudId: CloudId | null) => void;
-}
+};
 
-const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
+const TurnOnSync: React.FC<Readonly<TurnOnSyncProps>> = props => {
   const [turnOnSyncDialogOpen, setTurnOnSyncDialogOpen] = React.useState(false);
   if (props.syncCloudId != null) {
     return (
@@ -151,11 +156,11 @@ const TurnOnSync: React.FC<TurnOnSyncProps> = props => {
   }
 };
 
-interface SyncNowProps {
+type SyncNowProps = {
   syncCloudId: CloudId | null;
-}
+};
 
-const SyncNow: React.FC<SyncNowProps> = props => {
+const SyncNow: React.FC<Readonly<SyncNowProps>> = props => {
   const { syncResult: initialSyncResult } = React.useContext(InitialItems);
   const [syncResult, setSyncResult] = React.useState(initialSyncResult);
   const [syncing, setSyncing] = React.useState(false);
@@ -177,17 +182,19 @@ const SyncNow: React.FC<SyncNowProps> = props => {
         <p className="has-text-grey">
           {syncing ? (
             apis.i18n.getMessage('options_syncRunning')
-          ) : props.syncCloudId != null && syncResult ? (
-            <ShowResult result={syncResult} />
-          ) : (
+          ) : props.syncCloudId == null || syncResult == null ? (
             apis.i18n.getMessage('options_syncNever')
+          ) : isErrorResult(syncResult) ? (
+            apis.i18n.getMessage('error', syncResult.message)
+          ) : (
+            <FromNow time={dayjs(syncResult.timestamp)} />
           )}
         </p>
       </div>
       <div className="control">
         <button
           className="ub-button button has-text-primary"
-          disabled={props.syncCloudId == null || syncing}
+          disabled={syncing || props.syncCloudId == null}
           onClick={() => {
             sendMessage('sync-blacklist');
           }}

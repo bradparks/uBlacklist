@@ -13,7 +13,7 @@ export type InitialItemsType = LocalStorage.ItemsFor<
   ]
 >;
 
-export const InitialItems = React.createContext({} as InitialItemsType);
+export const InitialItems = React.createContext({} as Readonly<InitialItemsType>);
 
 export const InitialItemsProvider: React.FC = props => {
   const [initialItems, setInitialItems] = React.useState<InitialItemsType | null>(null);

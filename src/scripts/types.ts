@@ -16,15 +16,18 @@ export type Result = ErrorResult | SuccessResult;
 export type CloudId = 'googleDrive' | 'dropbox';
 
 export interface Cloud {
-  messageNames: { sync: string; syncDescription: string; syncTurnedOn: string };
   hostPermissions: string[];
+  messageNames: { sync: string; syncDescription: string; syncTurnedOn: string };
+  modifiedTimePrecision: 'millisecond' | 'second';
+
   authorize(): Promise<{ authorizationCode: string }>;
   getAccessToken(
     authorizationCode: string,
   ): Promise<{ accessToken: string; expiresIn: number; refreshToken: string }>;
   refreshAccessToken(refreshToken: string): Promise<{ accessToken: string; expiresIn: number }>;
-  findFile(accessToken: string): Promise<{ id: string; modifiedTime: dayjs.Dayjs } | null>;
+
   createFile(accessToken: string, content: string, modifiedTime: dayjs.Dayjs): Promise<void>;
+  findFile(accessToken: string): Promise<{ id: string; modifiedTime: dayjs.Dayjs } | null>;
   readFile(accessToken: string, id: string): Promise<{ content: string }>;
   writeFile(
     accessToken: string,

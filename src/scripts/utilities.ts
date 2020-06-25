@@ -1,4 +1,3 @@
-import Joi from '@hapi/joi';
 import dayjs from 'dayjs';
 import { ErrorResult, Result, SuccessResult } from './types';
 
@@ -16,6 +15,12 @@ export class AltURL {
 
   toString(): string {
     return `${this.scheme}://${this.host}${this.path}`;
+  }
+}
+
+export class HTTPError extends Error {
+  constructor(public status: number, public statusText: string) {
+    super(`${status} ${statusText}`);
   }
 }
 
@@ -163,58 +168,6 @@ export function successResult(): SuccessResult {
   };
 }
 // #endregion Result
-
-// #region request
-export class HTTPError extends Error {
-  constructor(public status: number, public statusText: string) {
-    super(`${status} ${statusText}`);
-  }
-}
-
-export class BadResponse extends Error {
-  constructor() {
-    super('Bad response');
-  }
-}
-
-export async function request(input: RequestInfo, init?: RequestInit): Promise<void> {
-  const response = await fetch(input, init);
-  if (!response.ok) {
-    throw new HTTPError(response.status, response.statusText);
-  }
-}
-
-export async function requestJSON(input: RequestInfo, init?: RequestInit): Promise<unknown> {
-  const response = await fetch(input, init);
-  if (!response.ok) {
-    throw new HTTPError(response.status, response.statusText);
-  }
-  try {
-    return await response.json();
-  } catch {
-    throw new BadResponse();
-  }
-}
-
-export async function requestText(input: RequestInfo, init?: RequestInit): Promise<string> {
-  const response = await fetch(input, init);
-  if (!response.ok) {
-    throw new HTTPError(response.status, response.statusText);
-  }
-  try {
-    return await response.text();
-  } catch {
-    throw new BadResponse();
-  }
-}
-// #endregion request
-
-export function validate<T>(value: unknown, schema: Joi.Schema): asserts value is T {
-  const result = schema.validate(value, { allowUnknown: true });
-  if (result.error) {
-    throw result.error;
-  }
-}
 
 // #region string
 export function escapeHTML(s: string): string {

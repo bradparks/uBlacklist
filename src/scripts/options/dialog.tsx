@@ -5,7 +5,7 @@ export type DialogProps = {
   setOpen: (open: boolean) => void;
 };
 
-export const Dialog: React.FC<DialogProps> = props => {
+export const Dialog: React.FC<Readonly<DialogProps>> = props => {
   const dialog = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
     if (props.open) {

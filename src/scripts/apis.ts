@@ -24,21 +24,7 @@ export namespace apis {
   }
 
   export namespace identity {
-    export type TokenDetails = chrome.identity.TokenDetails;
     export type WebAuthFlowOptions = chrome.identity.WebAuthFlowOptions;
-
-    // NOTE: Chromium-based browsers other than Chrome may not implement 'chrome.i18n.getAuthToken'.
-    export function getAuthToken(details: TokenDetails): Promise<string> {
-      return new Promise<string>((resolve, reject) => {
-        chrome.identity.getAuthToken(details, token => {
-          if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError.message));
-          } else {
-            resolve(token);
-          }
-        });
-      });
-    }
 
     export function getRedirectURL(path?: string): string {
       return chrome.identity.getRedirectURL(path);

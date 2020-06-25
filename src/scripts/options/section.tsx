@@ -4,7 +4,7 @@ export type SectionProps = {
   title: string;
 };
 
-export const Section: React.FC<SectionProps> = props => (
+export const Section: React.FC<Readonly<SectionProps>> = props => (
   <section className="section">
     <h1 className="title">{props.title}</h1>
     <div className="panel">

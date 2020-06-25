@@ -90,7 +90,7 @@ export async function syncFile(
     };
     const cloudFile = await refreshOnUnauthorized(() => cloud.findFile(token.accessToken));
     if (cloudFile) {
-      if (modifiedTime.isBefore(cloudFile.modifiedTime)) {
+      if (modifiedTime.isBefore(cloudFile.modifiedTime, cloud.modifiedTimePrecision)) {
         const { content: cloudContent } = await refreshOnUnauthorized(() =>
           cloud.readFile(token.accessToken, cloudFile.id),
         );
@@ -98,7 +98,7 @@ export async function syncFile(
           content: cloudContent,
           modifiedTime: cloudFile.modifiedTime,
         };
-      } else if (modifiedTime.isSame(cloudFile.modifiedTime)) {
+      } else if (modifiedTime.isSame(cloudFile.modifiedTime, cloud.modifiedTimePrecision)) {
         return null;
       } else {
         await refreshOnUnauthorized(() =>

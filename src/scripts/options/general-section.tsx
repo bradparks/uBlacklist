@@ -16,7 +16,7 @@ type ImportBlacklistDialogProps = {
   importBlacklist: (blacklist: string) => void;
 };
 
-const ImportBlacklistDialog: React.FC<ImportBlacklistDialogProps> = props => {
+const ImportBlacklistDialog: React.FC<Readonly<ImportBlacklistDialogProps>> = props => {
   const [domains, setDomains] = React.useState('');
   React.useEffect(() => {
     setDomains('');
@@ -197,7 +197,7 @@ type RegisterSearchEngineProps = {
   searchEngine: SearchEngine;
 };
 
-const RegisterSearchEngine: React.FC<RegisterSearchEngineProps> = props => {
+const RegisterSearchEngine: React.FC<Readonly<RegisterSearchEngineProps>> = props => {
   const [registered, setRegistered] = React.useState(false);
   React.useLayoutEffect(() => {
     (async () => {
@@ -259,7 +259,7 @@ type ItemSwitchProps = {
   label: string;
 };
 
-const ItemSwitch: React.FC<ItemSwitchProps> = props => {
+const ItemSwitch: React.FC<Readonly<ItemSwitchProps>> = props => {
   const { [props.itemKey]: initialItem } = React.useContext(InitialItems);
   const [item, setItem] = React.useState(initialItem);
   return (
